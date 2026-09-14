@@ -1,0 +1,364 @@
+/* ==========================================================================
+   MUHAR STUDIO — Luxury Editorial Services Section (Horizontal Rows)
+   ========================================================================== */
+
+.muhar-services {
+  width: 100%;
+  background-color: #FAF7F2;
+  background-image: url('/assets/services-bg.jpg');
+  background-size: cover;
+  background-position: right center;
+  background-repeat: no-repeat;
+  color: var(--muhar-text, #24211E);
+  padding: 130px 48px 160px;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.muhar-services::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(250, 247, 242, 0.88) 0%,
+    rgba(250, 247, 242, 0.65) 45%,
+    rgba(250, 247, 242, 0.1) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+.muhar-services__container {
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   Section Header (Asymmetric Left-Aligned Editorial Style)
+   ========================================================================== */
+.muhar-services__header {
+  margin-bottom: 76px;
+  max-width: 580px;
+}
+
+.muhar-services__eyebrow {
+  display: block;
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted, #6B6560);
+  margin-bottom: 16px;
+  line-height: 1.2;
+}
+
+.muhar-services__title {
+  font-family: var(--muhar-hero-font-serif, 'Cormorant Garamond', 'Playfair Display', Georgia, serif);
+  font-size: clamp(34px, 3.4vw, 48px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muhar-text, #24211E);
+  margin-bottom: 14px;
+}
+
+.muhar-services__subtitle {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: clamp(13.5px, 1.05vw, 15.5px);
+  font-weight: 350;
+  line-height: 1.6;
+  color: var(--muhar-text-muted, #6B6560);
+  letter-spacing: 0.01em;
+  max-width: 460px;
+}
+
+/* ==========================================================================
+   Editorial Service Rows List
+   ========================================================================== */
+.muhar-services__list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+/* Individual Service Row */
+.muhar-service-row {
+  position: relative;
+  width: 100%;
+  cursor: pointer;
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  margin-top: -1px;
+  background-color: transparent;
+  transition: background-color 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.muhar-service-row:first-child {
+  margin-top: 0;
+}
+
+/* Thin Subtle Divider Line */
+.muhar-service-row__divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(36, 33, 30, 0.14);
+  transition: background-color 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+  z-index: 1;
+}
+
+.muhar-service-row__divider--top {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.muhar-service-row__divider--bottom {
+  position: relative;
+  bottom: 0;
+  left: 0;
+}
+
+/* Row Content Layout */
+.muhar-service-row__content {
+  display: grid;
+  grid-template-columns: 70px 1fr auto;
+  align-items: center;
+  padding: 44px 12px;
+  box-sizing: border-box;
+  transition: padding 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Service Number */
+.muhar-service-row__number {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.20em;
+  color: var(--muhar-text-muted, #756F68);
+  transition: color 280ms ease, transform 280ms cubic-bezier(0.16, 1, 0.3, 1), font-weight 280ms ease;
+  line-height: 1;
+}
+
+/* Service Name Title */
+.muhar-service-row__title-wrap {
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.muhar-service-row__title {
+  font-family: var(--muhar-hero-font-serif, 'Cormorant Garamond', 'Playfair Display', Georgia, serif);
+  font-size: clamp(28px, 3.2vw, 44px);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muhar-text, #24211E);
+  line-height: 1.15;
+  margin: 0;
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+              color 280ms ease;
+  will-change: transform;
+}
+
+/* Far-Right Minimal Arrow Action with Circular Accent Ring */
+.muhar-service-row__action {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-left: 24px;
+}
+
+.muhar-service-row__arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(36, 33, 30, 0.16);
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: clamp(20px, 2vw, 24px);
+  font-weight: 300;
+  color: var(--muhar-text, #24211E);
+  opacity: 0.75;
+  background-color: transparent;
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 320ms cubic-bezier(0.16, 1, 0.3, 1),
+              color 320ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 320ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 320ms ease,
+              opacity 300ms ease;
+  will-change: transform;
+}
+
+/* ==========================================================================
+   Hover & Active Interactions (Isolated to Hovered Row Only)
+   ========================================================================== */
+@media (hover: hover) {
+  .muhar-service-row:hover {
+    z-index: 5;
+    background-color: rgba(36, 33, 30, 0.045);
+  }
+
+  .muhar-service-row:hover .muhar-service-row__divider {
+    background-color: rgba(36, 33, 30, 0.36);
+    z-index: 2;
+  }
+
+  .muhar-service-row:hover .muhar-service-row__content {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .muhar-service-row:hover .muhar-service-row__number {
+    color: var(--muhar-text, #24211E);
+    font-weight: 600;
+    transform: translateX(2px);
+  }
+
+  .muhar-service-row:hover .muhar-service-row__title {
+    transform: translateX(14px);
+    color: #0E0C0A;
+  }
+
+  .muhar-service-row:hover .muhar-service-row__arrow {
+    transform: translateX(8px);
+    opacity: 1;
+    border-color: #24211E;
+    background-color: #24211E;
+    color: #FAF7F2;
+    box-shadow: 0 4px 16px rgba(36, 33, 30, 0.20);
+  }
+}
+
+.muhar-service-row:focus-visible {
+  outline: none;
+  background-color: rgba(36, 33, 30, 0.04);
+}
+
+.muhar-service-row:focus-visible .muhar-service-row__arrow {
+  opacity: 1;
+  border-color: #24211E;
+  background-color: #24211E;
+  color: #FAF7F2;
+}
+
+.muhar-service-row:active {
+  background-color: rgba(36, 33, 30, 0.06);
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .muhar-services {
+    padding: 100px 36px 120px;
+  }
+
+  .muhar-services__header {
+    margin-bottom: 56px;
+  }
+
+  .muhar-service-row__content {
+    grid-template-columns: 56px 1fr auto;
+    padding: 36px 8px;
+  }
+
+  .muhar-service-row__title {
+    font-size: clamp(24px, 3.0vw, 34px);
+  }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+  .muhar-services {
+    padding: 75px 20px 90px;
+  }
+
+  .muhar-services__header {
+    margin-bottom: 38px;
+  }
+
+  .muhar-services__eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    margin-bottom: 12px;
+  }
+
+  .muhar-services__title {
+    font-size: clamp(28px, 7vw, 36px);
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+  }
+
+  .muhar-services__subtitle {
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  .muhar-service-row {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .muhar-service-row__content {
+    grid-template-columns: 36px 1fr auto;
+    padding: 26px 4px;
+    gap: 12px;
+    min-height: 56px;
+  }
+
+  .muhar-service-row__number {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    align-self: center;
+  }
+
+  .muhar-service-row__title {
+    font-size: 20px;
+    line-height: 1.25;
+  }
+
+  .muhar-service-row__arrow {
+    font-size: 18px;
+    opacity: 0.75;
+  }
+}
+
+@media (max-width: 360px) {
+  .muhar-services {
+    padding: 60px 16px 75px;
+  }
+
+  .muhar-services__title {
+    font-size: 26px;
+  }
+
+  .muhar-service-row__content {
+    grid-template-columns: 28px 1fr auto;
+    gap: 8px;
+    padding: 22px 0;
+  }
+
+  .muhar-service-row__title {
+    font-size: 17px;
+  }
+
+  .muhar-service-row__number {
+    font-size: 10px;
+  }
+}
+

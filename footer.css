@@ -1,0 +1,379 @@
+/* ==========================================================================
+   MUHAR STUDIO — Luxury Minimal Editorial Footer Section
+   ========================================================================== */
+
+.muhar-footer {
+  width: 100%;
+  background-color: #EBE4DA;
+  color: var(--muhar-text, #24211E);
+  padding: 140px 48px 48px;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-top: 1px solid rgba(36, 33, 30, 0.10);
+}
+
+.muhar-footer__top-divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(36, 33, 30, 0.12);
+  margin-bottom: 96px;
+}
+
+/* ==========================================================================
+   Architectural Emblem Watermark Background Layer
+   ========================================================================== */
+.muhar-footer__bg-watermark {
+  position: absolute;
+  top: 50%;
+  right: 5%;
+  transform: translateY(-50%);
+  width: min(540px, 39vw);
+  height: min(540px, 39vw);
+  background-image: url('/assets/footer-bg.jpg');
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0.16;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.muhar-footer__container {
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   Asymmetric 3-Column Editorial Grid
+   ========================================================================== */
+.muhar-footer__grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr 1fr;
+  gap: 80px;
+  align-items: start;
+  margin-bottom: 96px;
+  width: 100%;
+}
+
+/* 1. Main Brand Area */
+.muhar-footer__brand-col {
+  display: flex;
+  flex-direction: column;
+  max-width: 440px;
+}
+
+.muhar-footer__brand-title {
+  font-family: var(--muhar-hero-font-serif, 'Cormorant Garamond', 'Playfair Display', Georgia, serif);
+  font-size: clamp(34px, 3.8vw, 52px);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.015em;
+  color: var(--muhar-text, #24211E);
+  margin: 0 0 18px 0;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.muhar-footer__brand-tagline {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: clamp(14px, 1.05vw, 15px);
+  font-weight: 350;
+  line-height: 1.72;
+  color: var(--muhar-text-muted, #6B6560);
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+/* Column Section Titles / Eyebrows */
+.muhar-footer__col-label {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muhar-text, #24211E);
+  margin: 0 0 24px 0;
+  line-height: 1.2;
+}
+
+/* 2. Navigation Column (Fully Clickable Items & Touch Accessible) */
+.muhar-footer__nav-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.muhar-footer__nav-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.muhar-footer__nav-item {
+  margin: 0;
+  padding: 0;
+  display: block;
+  width: 100%;
+}
+
+.muhar-footer__nav-link {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted, #5A544E);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  min-height: 30px;
+  padding: 5px 0;
+  box-sizing: border-box;
+  cursor: pointer;
+  position: relative;
+  transition: color 250ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.muhar-footer__nav-link:hover,
+.muhar-footer__nav-link:focus-visible {
+  color: var(--muhar-text, #24211E);
+  transform: translateX(4px);
+  outline: none;
+}
+
+.muhar-footer__nav-link:focus-visible {
+  outline: 1px dashed var(--muhar-text, #24211E);
+  outline-offset: 3px;
+}
+
+/* 3. Contact Column */
+.muhar-footer__contact-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.muhar-footer__contact-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.muhar-footer__contact-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.muhar-footer__contact-type {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 9.5px;
+  font-weight: 500;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted, #756F68);
+  line-height: 1.2;
+}
+
+.muhar-footer__contact-val {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--muhar-text, #24211E);
+  text-decoration: none;
+  line-height: 1.5;
+  transition: color 280ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 0;
+}
+
+.muhar-footer__contact-val[href]:hover {
+  color: #000000;
+  transform: translateX(3px);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.muhar-footer__contact-arrow {
+  font-size: 11px;
+  opacity: 0.6;
+  transition: transform 250ms ease, opacity 250ms ease;
+}
+
+.muhar-footer__contact-val:hover .muhar-footer__contact-arrow {
+  transform: translateX(3px);
+  opacity: 1;
+}
+
+/* ==========================================================================
+   4. Bottom Footer Row
+   ========================================================================== */
+.muhar-footer__bottom {
+  border-top: 1px solid rgba(36, 33, 30, 0.12);
+  padding-top: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.muhar-footer__copyright {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 11.5px;
+  font-weight: 350;
+  color: var(--muhar-text-muted, #6B6560);
+  letter-spacing: 0.03em;
+  margin: 0;
+}
+
+.muhar-footer__descriptor {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted, #756F68);
+  margin: 0;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .muhar-footer {
+    padding: 100px 36px 40px;
+  }
+
+  .muhar-footer__top-divider {
+    margin-bottom: 64px;
+  }
+
+  .muhar-footer__grid {
+    grid-template-columns: 1.2fr 1fr 1fr;
+    gap: 48px;
+    margin-bottom: 64px;
+  }
+
+  .muhar-footer__brand-title {
+    font-size: clamp(30px, 3.4vw, 42px);
+  }
+}
+
+/* Mobile Landscape / Small Tablet (max-width: 860px) */
+@media (max-width: 860px) {
+  .muhar-footer__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+
+  .muhar-footer__brand-col {
+    grid-column: 1 / -1;
+    max-width: 100%;
+  }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+  .muhar-footer {
+    padding: 70px 20px 32px;
+  }
+
+  .muhar-footer__top-divider {
+    margin-bottom: 40px;
+  }
+
+  .muhar-footer__grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    margin-bottom: 40px;
+  }
+
+  .muhar-footer__brand-title {
+    font-size: clamp(28px, 7.2vw, 36px);
+    margin-bottom: 12px;
+  }
+
+  .muhar-footer__brand-tagline {
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+
+  .muhar-footer__col-label {
+    margin-bottom: 16px;
+  }
+
+  .muhar-footer__nav-list {
+    gap: 6px;
+  }
+
+  .muhar-footer__nav-link {
+    min-height: 36px;
+    padding: 6px 0;
+  }
+
+  .muhar-footer__contact-list {
+    gap: 16px;
+  }
+
+  .muhar-footer__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding-top: 24px;
+  }
+
+  .muhar-footer__copyright {
+    font-size: 11px;
+  }
+
+  .muhar-footer__descriptor {
+    font-size: 9px;
+    letter-spacing: 0.16em;
+  }
+
+  /* Ornamental watermark strictly confined between top and bottom divider lines */
+  .muhar-footer__bg-watermark {
+    width: 200px;
+    height: 200px;
+    top: 50%;
+    right: 4%;
+    transform: translateY(-50%);
+    max-height: calc(100% - 150px);
+    opacity: 0.08;
+  }
+}
+
+@media (max-width: 360px) {
+  .muhar-footer {
+    padding: 55px 16px 28px;
+  }
+
+  .muhar-footer__brand-title {
+    font-size: 26px;
+  }
+
+  .muhar-footer__bg-watermark {
+    width: 160px;
+    height: 160px;
+    right: 0;
+    opacity: 0.06;
+  }
+}

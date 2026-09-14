@@ -1,0 +1,316 @@
+/* ==========================================================================
+   MUHAR STUDIO — Luxury Asymmetric Editorial About / Studio Section
+   ========================================================================== */
+
+.muhar-about {
+  width: 100%;
+  background-color: var(--muhar-bg, #FAF7F2);
+  color: var(--muhar-text, #24211E);
+  padding: 140px 48px 160px;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.muhar-about__container {
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   Asymmetric Editorial Two-Column Grid Composition
+   ========================================================================== */
+.muhar-about__grid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 88px;
+  align-items: center;
+  width: 100%;
+}
+
+/* ==========================================================================
+   Left Column: Editorial Statement & Supporting Copy
+   ========================================================================== */
+.muhar-about__content {
+  display: flex;
+  flex-direction: column;
+  max-width: 580px;
+}
+
+.muhar-about__eyebrow {
+  display: block;
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted, #6B6560);
+  margin-bottom: 24px;
+  line-height: 1.2;
+}
+
+.muhar-about__statement {
+  font-family: var(--muhar-hero-font-serif, 'Cormorant Garamond', 'Playfair Display', Georgia, serif);
+  font-size: clamp(34px, 3.6vw, 52px);
+  font-weight: 400;
+  line-height: 1.16;
+  letter-spacing: -0.01em;
+  color: var(--muhar-text, #24211E);
+  margin: 0 0 28px 0;
+}
+
+.muhar-about__copy {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: clamp(14px, 1.05vw, 15.5px);
+  font-weight: 350;
+  line-height: 1.78;
+  color: var(--muhar-text-muted, #5A544E);
+  letter-spacing: 0.01em;
+  max-width: 480px;
+  margin: 0 0 38px 0;
+}
+
+/* Link with Minimal Hover Micro-interaction */
+.muhar-about__action-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.muhar-about__link {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muhar-text, #24211E);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  padding-bottom: 5px;
+  border-bottom: 1px solid rgba(36, 33, 30, 0.45);
+  transition: border-bottom-color 280ms cubic-bezier(0.16, 1, 0.3, 1),
+              color 280ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.muhar-about__link:hover {
+  border-bottom-color: var(--muhar-text, #24211E);
+  color: #12100E;
+  transform: translateY(-1.5px);
+}
+
+.muhar-about__link-arrow {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 1;
+  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.muhar-about__link:hover .muhar-about__link-arrow,
+.muhar-about__link:focus-visible .muhar-about__link-arrow {
+  transform: translateX(5px);
+}
+
+.muhar-about__link:focus-visible {
+  outline: 1px dashed var(--muhar-text, #24211E);
+  outline-offset: 4px;
+}
+
+/* ==========================================================================
+   Right Column: Tall Editorial Image (Sharp Edges, No Shadows/Cards)
+   ========================================================================== */
+.muhar-about__visual {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.muhar-about__image-frame {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background-color: #EAE5DE;
+  border-radius: 0;
+  border: none;
+  box-shadow: 0 4px 20px -6px rgba(36, 33, 30, 0.04);
+  margin-left: auto;
+  transform: translateY(0);
+  transition: transform 500ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.muhar-about__image-frame:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 40px -10px rgba(36, 33, 30, 0.14);
+}
+
+.muhar-about__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  display: block;
+  border-radius: 0;
+  border: none;
+  transform: scale3d(1, 1, 1);
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.muhar-about__image-frame:hover .muhar-about__image {
+  transform: scale3d(1.04, 1.04, 1);
+}
+
+/* Subtle Editorial Image Caption */
+.muhar-about__caption {
+  margin-top: 14px;
+  max-width: 480px;
+  margin-left: auto;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.muhar-about__caption-line {
+  width: 24px;
+  height: 1px;
+  background-color: rgba(36, 33, 30, 0.25);
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+.muhar-about__caption-text {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted, #756F68);
+  margin: 0;
+  line-height: 1.2;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .muhar-about {
+    padding: 100px 36px 120px;
+  }
+
+  .muhar-about__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 48px;
+  }
+
+  .muhar-about__statement {
+    font-size: clamp(28px, 3.2vw, 38px);
+    margin-bottom: 22px;
+  }
+
+  .muhar-about__copy {
+    font-size: 14px;
+    margin-bottom: 30px;
+  }
+
+  .muhar-about__image-frame {
+    max-width: 100%;
+    aspect-ratio: 4 / 5;
+  }
+
+  .muhar-about__caption {
+    max-width: 100%;
+  }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+  .muhar-about {
+    padding: 75px 20px 90px;
+  }
+
+  .muhar-about__grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .muhar-about__content {
+    max-width: 100%;
+  }
+
+  .muhar-about__eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    margin-bottom: 14px;
+  }
+
+  .muhar-about__statement {
+    font-size: clamp(26px, 6.8vw, 34px);
+    line-height: 1.2;
+    margin-bottom: 18px;
+  }
+
+  .muhar-about__copy {
+    font-size: 13.5px;
+    line-height: 1.68;
+    margin-bottom: 26px;
+    max-width: 100%;
+  }
+
+  .muhar-about__link {
+    min-height: 38px;
+    padding-bottom: 4px;
+  }
+
+  .muhar-about__visual {
+    margin-top: 8px;
+  }
+
+  .muhar-about__image-frame {
+    max-width: 100%;
+    aspect-ratio: 4 / 5;
+    margin-left: 0;
+  }
+
+  .muhar-about__image {
+    object-position: center 35%;
+  }
+
+  .muhar-about__caption {
+    max-width: 100%;
+    margin-left: 0;
+    margin-top: 12px;
+  }
+
+  .muhar-about__caption-text {
+    font-size: 9.5px;
+    letter-spacing: 0.18em;
+  }
+}
+
+@media (max-width: 360px) {
+  .muhar-about {
+    padding: 60px 16px 75px;
+  }
+
+  .muhar-about__statement {
+    font-size: 24px;
+  }
+
+  .muhar-about__copy {
+    font-size: 13px;
+  }
+}
+

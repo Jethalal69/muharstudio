@@ -1,0 +1,458 @@
+/* ==========================================================================
+   MUHAR STUDIO — Cookie Consent Banner & Preferences Modal
+   Warm minimalist luxury editorial aesthetic matching MUHAR STUDIO
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. Cookie Consent Banner (Fixed Bottom)
+   -------------------------------------------------------------------------- */
+.muhar-cookie-banner {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  background-color: #FAF7F2;
+  border-top: 1px solid rgba(36, 33, 30, 0.14);
+  box-shadow: 0 -4px 30px rgba(36, 33, 30, 0.06);
+  padding: 22px 48px;
+  box-sizing: border-box;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 36px;
+  transform: translateY(105%);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1), opacity 400ms ease;
+}
+
+.muhar-cookie-banner.is-visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.muhar-cookie-banner__content {
+  flex: 1;
+  max-width: 740px;
+}
+
+.muhar-cookie-banner__eyebrow {
+  display: block;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #6B6560;
+  margin-bottom: 4px;
+}
+
+.muhar-cookie-banner__title {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-size: 20px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  color: #24211E;
+  margin: 0 0 4px 0;
+  line-height: 1.2;
+}
+
+.muhar-cookie-banner__text {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 350;
+  line-height: 1.6;
+  color: #524C46;
+  margin: 0;
+}
+
+.muhar-cookie-banner__actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+/* --------------------------------------------------------------------------
+   2. Cookie Buttons
+   -------------------------------------------------------------------------- */
+.muhar-cookie-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 22px;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  border-radius: 0;
+  cursor: pointer;
+  box-sizing: border-box;
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 250ms cubic-bezier(0.16, 1, 0.3, 1);
+  min-height: 42px;
+}
+
+.muhar-cookie-btn:focus-visible {
+  outline: 2px solid #24211E;
+  outline-offset: 2px;
+}
+
+/* Primary Button (Accept All / Save) */
+.muhar-cookie-btn--primary {
+  background-color: #24211E;
+  color: #FAF7F2;
+  border: 1px solid #24211E;
+}
+
+.muhar-cookie-btn--primary:hover {
+  background-color: #3F3A35;
+  border-color: #3F3A35;
+  color: #FAF7F2;
+}
+
+/* Secondary Button (Reject) */
+.muhar-cookie-btn--secondary {
+  background-color: transparent;
+  color: #24211E;
+  border: 1px solid rgba(36, 33, 30, 0.28);
+}
+
+.muhar-cookie-btn--secondary:hover {
+  background-color: rgba(36, 33, 30, 0.05);
+  border-color: #24211E;
+}
+
+/* Tertiary Button (Preferences Link) */
+.muhar-cookie-btn--tertiary {
+  background-color: transparent;
+  color: #6B6560;
+  border: 1px solid transparent;
+  padding: 12px 14px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+.muhar-cookie-btn--tertiary:hover {
+  color: #24211E;
+}
+
+/* --------------------------------------------------------------------------
+   3. Cookie Preferences Modal
+   -------------------------------------------------------------------------- */
+.muhar-cookie-modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(36, 33, 30, 0.45);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  box-sizing: border-box;
+  opacity: 0;
+  pointer-events: none;
+  visibility: hidden;
+  transition: opacity 300ms ease, visibility 300ms ease;
+}
+
+.muhar-cookie-modal-backdrop.is-open {
+  opacity: 1;
+  pointer-events: auto;
+  visibility: visible;
+}
+
+.muhar-cookie-modal {
+  background-color: #FAF7F2;
+  border: 1px solid rgba(36, 33, 30, 0.16);
+  box-shadow: 0 16px 48px rgba(36, 33, 30, 0.12);
+  width: 100%;
+  max-width: 620px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+  transform: scale(0.97) translateY(8px);
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
+}
+
+.muhar-cookie-modal-backdrop.is-open .muhar-cookie-modal {
+  transform: scale(1) translateY(0);
+}
+
+.muhar-cookie-modal__header {
+  padding: 32px 36px 20px;
+  border-bottom: 1px solid rgba(36, 33, 30, 0.10);
+  position: relative;
+}
+
+.muhar-cookie-modal__eyebrow {
+  display: block;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: #6B6560;
+  margin-bottom: 6px;
+}
+
+.muhar-cookie-modal__title {
+  font-family: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  color: #24211E;
+  margin: 0 0 10px 0;
+  line-height: 1.15;
+}
+
+.muhar-cookie-modal__intro {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 350;
+  line-height: 1.6;
+  color: #524C46;
+  margin: 0;
+}
+
+.muhar-cookie-modal__close {
+  position: absolute;
+  top: 28px;
+  right: 28px;
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: 1px solid rgba(36, 33, 30, 0.15);
+  color: #24211E;
+  font-size: 16px;
+  cursor: pointer;
+  transition: all 200ms ease;
+}
+
+.muhar-cookie-modal__close:hover {
+  background-color: #24211E;
+  color: #FAF7F2;
+  border-color: #24211E;
+}
+
+.muhar-cookie-modal__close:focus-visible {
+  outline: 2px solid #24211E;
+  outline-offset: 2px;
+}
+
+.muhar-cookie-modal__body {
+  padding: 24px 36px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Category Item Card */
+.muhar-cookie-category {
+  padding: 18px 20px;
+  background-color: rgba(235, 228, 218, 0.35);
+  border: 1px solid rgba(36, 33, 30, 0.08);
+}
+
+.muhar-cookie-category__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.muhar-cookie-category__label {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #24211E;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.muhar-cookie-category__badge {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #6B6560;
+  background-color: rgba(36, 33, 30, 0.08);
+  padding: 4px 8px;
+}
+
+.muhar-cookie-category__desc {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: 12px;
+  font-weight: 350;
+  line-height: 1.6;
+  color: #524C46;
+  margin: 0;
+}
+
+/* Custom Checkbox Toggle Switch */
+.muhar-cookie-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.muhar-cookie-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.muhar-cookie-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(36, 33, 30, 0.20);
+  border: 1px solid rgba(36, 33, 30, 0.30);
+  transition: all 250ms ease;
+}
+
+.muhar-cookie-slider::before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #FAF7F2;
+  transition: transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.muhar-cookie-switch input:checked + .muhar-cookie-slider {
+  background-color: #24211E;
+  border-color: #24211E;
+}
+
+.muhar-cookie-switch input:checked + .muhar-cookie-slider::before {
+  transform: translateX(20px);
+  background-color: #FAF7F2;
+}
+
+.muhar-cookie-switch input:disabled + .muhar-cookie-slider {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.muhar-cookie-switch input:focus-visible + .muhar-cookie-slider {
+  outline: 2px solid #24211E;
+  outline-offset: 2px;
+}
+
+/* Modal Footer Actions */
+.muhar-cookie-modal__footer {
+  padding: 20px 36px 32px;
+  border-top: 1px solid rgba(36, 33, 30, 0.10);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+/* --------------------------------------------------------------------------
+   4. Footer Reopen Button
+   -------------------------------------------------------------------------- */
+.muhar-cookie-reopen-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+  letter-spacing: inherit;
+  transition: opacity 200ms ease;
+}
+
+.muhar-cookie-reopen-btn:hover {
+  opacity: 0.7;
+}
+
+.muhar-cookie-reopen-btn:focus-visible {
+  outline: 2px solid #24211E;
+  outline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   5. Responsive Styles
+   -------------------------------------------------------------------------- */
+@media (max-width: 900px) {
+  .muhar-cookie-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 20px 20px 24px;
+    gap: 18px;
+  }
+
+  .muhar-cookie-banner__actions {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .muhar-cookie-banner__actions .muhar-cookie-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .muhar-cookie-modal__header {
+    padding: 24px 20px 16px;
+  }
+
+  .muhar-cookie-modal__body {
+    padding: 16px 20px;
+  }
+
+  .muhar-cookie-modal__footer {
+    padding: 16px 20px 24px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .muhar-cookie-modal__footer .muhar-cookie-btn {
+    width: 100%;
+    text-align: center;
+  }
+
+  /* Keep back-to-top button clear when cookie banner is visible on mobile */
+  body.has-cookie-banner-open .muhar-back-to-top {
+    bottom: 230px !important;
+  }
+}

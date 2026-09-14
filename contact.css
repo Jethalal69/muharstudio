@@ -1,0 +1,910 @@
+/* ==========================================================================
+   MUHAR STUDIO — Consultation & Contact Sections Stylesheet
+   ========================================================================== */
+
+/* ==========================================================================
+   1. GET CONSULTATION SECTION
+   ========================================================================== */
+.muhar-consultation {
+  width: 100%;
+  background-color: var(--muhar-bg, #FAF7F2);
+  color: var(--muhar-text, #24211E);
+  padding: 140px 48px 120px;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+  scroll-margin-top: 80px;
+}
+
+.muhar-consultation__top-divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(36, 33, 30, 0.12);
+  margin-bottom: 96px;
+}
+
+.muhar-consultation__container {
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.muhar-consultation__grid {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 96px;
+  align-items: center;
+  width: 100%;
+}
+
+/* Left Column: Intro Copy */
+.muhar-consultation__info-col {
+  display: flex;
+  flex-direction: column;
+  max-width: 500px;
+}
+
+.muhar-consultation__eyebrow {
+  display: block;
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted, #6B6560);
+  margin-bottom: 24px;
+  line-height: 1.2;
+}
+
+.muhar-consultation__title {
+  font-family: var(--muhar-hero-font-serif, 'Cormorant Garamond', 'Playfair Display', Georgia, serif);
+  font-size: clamp(36px, 3.8vw, 54px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--muhar-text, #24211E);
+  margin: 0 0 24px 0;
+}
+
+.muhar-consultation__copy {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: clamp(14px, 1.05vw, 15.5px);
+  font-weight: 350;
+  line-height: 1.76;
+  color: var(--muhar-text-muted, #5A544E);
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+/* Right Column: Consultation Form */
+.muhar-consultation__form-col {
+  width: 100%;
+}
+
+.muhar-consultation-form {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  width: 100%;
+}
+
+.muhar-form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  width: 100%;
+}
+
+.muhar-form-group {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  width: 100%;
+  padding: 10px 14px 6px;
+  background-color: transparent;
+  border-radius: 2px;
+  transition: background-color 280ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 280ms ease;
+  box-sizing: border-box;
+}
+
+/* Clear, Elegant Bottom Focus Accent Line */
+.muhar-form-group::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--muhar-text, #24211E);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+              background-color 250ms ease;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.muhar-form-group:focus-within {
+  background-color: rgba(36, 33, 30, 0.038);
+  box-shadow: 0 4px 16px -4px rgba(36, 33, 30, 0.06);
+}
+
+.muhar-form-group:focus-within::after {
+  transform: scaleX(1);
+}
+
+.muhar-form-group.has-error {
+  background-color: rgba(168, 50, 38, 0.03);
+}
+
+.muhar-form-group.has-error::after {
+  background-color: #A83226;
+  transform: scaleX(1);
+}
+
+.muhar-form-label {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted, #6B6560);
+  margin-bottom: 6px;
+  transform-origin: left;
+  transition: color 240ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 240ms cubic-bezier(0.16, 1, 0.3, 1),
+              letter-spacing 240ms cubic-bezier(0.16, 1, 0.3, 1),
+              font-weight 240ms ease;
+}
+
+/* Focus State on Label */
+.muhar-form-group:focus-within .muhar-form-label {
+  color: var(--muhar-text, #24211E);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  transform: translateX(3px);
+}
+
+/* Architectural Minimal Line Inputs */
+.muhar-form-input,
+.muhar-form-select,
+.muhar-form-textarea {
+  width: 100%;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(36, 33, 30, 0.22);
+  border-radius: 0;
+  padding: 8px 0 10px;
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 14.5px;
+  font-weight: 400;
+  color: var(--muhar-text, #24211E);
+  box-sizing: border-box;
+  transition: border-bottom-color 280ms cubic-bezier(0.16, 1, 0.3, 1),
+              color 200ms ease;
+  outline: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+.muhar-form-input::placeholder,
+.muhar-form-textarea::placeholder {
+  color: rgba(36, 33, 30, 0.38);
+  font-weight: 350;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.muhar-form-input:focus::placeholder,
+.muhar-form-textarea:focus::placeholder {
+  opacity: 0.45;
+  transform: translateX(4px);
+}
+
+.muhar-form-input:focus,
+.muhar-form-select:focus,
+.muhar-form-textarea:focus {
+  border-bottom-color: transparent;
+  color: #11100E;
+}
+
+.muhar-form-input:focus-visible,
+.muhar-form-select:focus-visible,
+.muhar-form-textarea:focus-visible {
+  outline: none;
+}
+
+/* Custom Select Styling */
+.muhar-form-select-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.muhar-form-select {
+  cursor: pointer;
+  padding-right: 28px;
+}
+
+.muhar-form-select-wrap::after {
+  content: '↓';
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--muhar-text-muted, #756F68);
+  position: absolute;
+  right: 4px;
+  bottom: 12px;
+  pointer-events: none;
+  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+              color 250ms ease;
+}
+
+.muhar-form-select:focus + .muhar-form-select-wrap::after,
+.muhar-form-group:focus-within .muhar-form-select-wrap::after {
+  color: var(--muhar-text, #24211E);
+  transform: translateY(3px);
+}
+
+.muhar-form-select option {
+  background-color: #FAF7F2;
+  color: #24211E;
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  padding: 8px;
+}
+
+/* Textarea */
+.muhar-form-textarea {
+  resize: vertical;
+  min-height: 84px;
+  line-height: 1.6;
+}
+
+/* Submit Action Button */
+.muhar-form-actions {
+  display: flex;
+  align-items: center;
+  margin-top: 12px;
+}
+
+.muhar-form-submit-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 36px;
+  border: 1px solid var(--muhar-text, #24211E);
+  background-color: transparent;
+  color: var(--muhar-text, #24211E);
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  border-radius: 0;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 300ms cubic-bezier(0.16, 1, 0.3, 1),
+              color 300ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 300ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 300ms ease;
+}
+
+.muhar-form-submit-btn:hover {
+  background-color: var(--muhar-text, #24211E);
+  color: var(--muhar-bg, #FAF7F2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px -8px rgba(36, 33, 30, 0.18);
+}
+
+.muhar-form-submit-btn:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px var(--muhar-bg, #FAF7F2), 0 0 0 4px var(--muhar-text, #24211E);
+}
+
+.muhar-form-submit-btn:active {
+  transform: translateY(0);
+}
+
+.muhar-form-submit-arrow {
+  display: inline-block;
+  font-size: 13px;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.muhar-form-submit-btn:hover .muhar-form-submit-arrow {
+  transform: translateX(4px);
+}
+
+/* Inline Form Validation & Error States (Smooth Zero-CLS Transition) */
+.muhar-form-group.has-error .muhar-form-input,
+.muhar-form-group.has-error .muhar-form-select,
+.muhar-form-group.has-error .muhar-form-textarea {
+  border-bottom-color: #A83226;
+}
+
+.muhar-form-group.has-error .muhar-form-label {
+  color: #A83226;
+}
+
+.muhar-form-field-error {
+  display: block;
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 11px;
+  font-weight: 450;
+  letter-spacing: 0.04em;
+  color: #A83226;
+  margin-top: 0;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-4px);
+  overflow: hidden;
+  transition: max-height 280ms cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 240ms ease,
+              transform 280ms cubic-bezier(0.16, 1, 0.3, 1),
+              margin-top 280ms ease;
+  pointer-events: none;
+}
+
+.muhar-form-group.has-error .muhar-form-field-error {
+  max-height: 36px;
+  opacity: 1;
+  transform: translateY(0);
+  margin-top: 6px;
+  pointer-events: auto;
+}
+
+.muhar-form-error-banner {
+  display: none;
+  padding: 16px 20px;
+  border: 1px solid rgba(168, 50, 38, 0.35);
+  background-color: rgba(168, 50, 38, 0.05);
+  color: #A83226;
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 12.5px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  margin-bottom: 12px;
+}
+
+.muhar-form-error-banner.is-visible {
+  display: block;
+}
+
+/* Accessible Skip to Content Link */
+.muhar-skip-link {
+  position: absolute;
+  top: -60px;
+  left: 20px;
+  background: var(--muhar-text, #24211E);
+  color: #FAF7F2;
+  padding: 10px 18px;
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  text-decoration: none;
+  z-index: 10000;
+  transition: top 200ms ease;
+}
+
+.muhar-skip-link:focus {
+  top: 16px;
+}
+
+/* Tasteful Success State */
+.muhar-form-success {
+  display: none;
+  padding: 28px 32px;
+  border: 1px solid rgba(36, 33, 30, 0.18);
+  background-color: rgba(250, 247, 242, 0.85);
+  margin-top: 8px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 400ms ease, transform 400ms ease;
+}
+
+.muhar-form-success.is-visible {
+  display: block;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+
+.muhar-form-success__title {
+  font-family: var(--muhar-hero-font-serif, 'Cormorant Garamond', 'Playfair Display', Georgia, serif);
+  font-size: 22px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--muhar-text, #24211E);
+  margin: 0 0 8px 0;
+}
+
+.muhar-form-success__sub {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 13.5px;
+  font-weight: 350;
+  line-height: 1.6;
+  color: var(--muhar-text-muted, #6B6560);
+  margin: 0;
+}
+
+
+/* ==========================================================================
+   2. DEDICATED INLINE CONTACT SECTION (Directly below Consultation)
+   ========================================================================== */
+.muhar-contact-section {
+  width: 100%;
+  background-color: var(--muhar-bg, #FAF7F2);
+  color: var(--muhar-text, #24211E);
+  padding: 120px 48px 160px;
+  position: relative;
+  box-sizing: border-box;
+  overflow: hidden;
+  scroll-margin-top: 80px;
+}
+
+/* Subtle Architectural Emblem Watermark */
+.muhar-contact-section__watermark {
+  position: absolute;
+  top: 15%;
+  right: -5%;
+  width: clamp(360px, 42vw, 640px);
+  height: clamp(360px, 42vw, 640px);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cg fill='none' stroke='%2324211E' stroke-width='0.75' opacity='0.035'%3E%3Ccircle cx='200' cy='200' r='180'/%3E%3Ccircle cx='200' cy='200' r='140'/%3E%3Cpolygon points='200,20 380,200 200,380 20,200'/%3E%3Cline x1='200' y1='20' x2='200' y2='380'/%3E%3Cline x1='20' y1='200' x2='380' y2='200'/%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.muhar-contact-section__divider {
+  width: 100%;
+  height: 1px;
+  background-color: rgba(36, 33, 30, 0.12);
+  margin-bottom: 96px;
+}
+
+.muhar-contact-section__container {
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
+  position: relative;
+  z-index: 2;
+}
+
+.muhar-contact-section__grid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 88px;
+  align-items: center;
+  width: 100%;
+}
+
+/* Left Column: Eyebrow, Large Statement, Supporting Copy & Studio Meta */
+.muhar-contact-section__intro-col {
+  display: flex;
+  flex-direction: column;
+  max-width: 520px;
+}
+
+.muhar-contact-section__eyebrow {
+  display: block;
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted, #6B6560);
+  margin-bottom: 24px;
+  line-height: 1.2;
+}
+
+.muhar-contact-section__title {
+  font-family: var(--muhar-hero-font-serif, 'Cormorant Garamond', 'Playfair Display', Georgia, serif);
+  font-size: clamp(38px, 4.4vw, 62px);
+  font-weight: 400;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  color: var(--muhar-text, #24211E);
+  margin: 0 0 28px 0;
+}
+
+.muhar-contact-section__copy {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: clamp(14.5px, 1.1vw, 16.5px);
+  font-weight: 350;
+  line-height: 1.76;
+  color: var(--muhar-text-muted, #5A544E);
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+
+.muhar-contact-section__meta {
+  border-top: 1px solid rgba(36, 33, 30, 0.12);
+  padding-top: 28px;
+}
+
+.muhar-contact-section__meta-label {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--muhar-text, #24211E);
+  margin-bottom: 8px;
+}
+
+.muhar-contact-section__meta-text {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 13.5px;
+  font-weight: 350;
+  line-height: 1.65;
+  color: var(--muhar-text-muted, #6B6560);
+  margin: 0;
+}
+
+/* Right Column: Direct Contact Details & Action Buttons */
+.muhar-contact-section__details-col {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.muhar-contact-section__details-heading {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muhar-text, #24211E);
+  margin: 0 0 24px 0;
+}
+
+.muhar-contact-rows-wrap {
+  display: flex;
+  flex-direction: column;
+  border-top: 1px solid rgba(36, 33, 30, 0.16);
+  margin-bottom: 44px;
+}
+
+.muhar-contact-detail-row {
+  display: grid;
+  grid-template-columns: 140px 1fr;
+  padding: 28px 0;
+  border-bottom: 1px solid rgba(36, 33, 30, 0.12);
+  align-items: baseline;
+}
+
+.muhar-contact-detail-row__label {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted, #756F68);
+}
+
+.muhar-contact-detail-row__value {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 15.5px;
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--muhar-text, #24211E);
+  text-decoration: none;
+  line-height: 1.5;
+  transition: color 250ms ease;
+}
+
+.muhar-contact-detail-row__value[href]:hover {
+  color: #000000;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+
+/* Action Buttons */
+.muhar-contact-actions-wrap {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  width: 100%;
+}
+
+.muhar-contact-action-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 14px;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: transparent;
+  border: 1px solid var(--muhar-text, #24211E);
+  color: var(--muhar-text, #24211E);
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 0;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background-color 300ms cubic-bezier(0.25, 1, 0.5, 1),
+              color 300ms cubic-bezier(0.25, 1, 0.5, 1),
+              transform 300ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.muhar-contact-action-btn:hover {
+  background-color: var(--muhar-text, #24211E);
+  color: var(--muhar-bg, #FAF7F2);
+  transform: translateY(-2px);
+}
+
+.muhar-contact-action-btn__arrow {
+  display: inline-block;
+  font-size: 12px;
+  transition: transform 300ms cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.muhar-contact-action-btn:hover .muhar-contact-action-btn__arrow {
+  transform: translateX(4px);
+}
+
+
+/* ==========================================================================
+   3. MINIMAL REUSABLE FOOTER
+   ========================================================================== */
+.muhar-home-footer {
+  border-top: 1px solid rgba(36, 33, 30, 0.14);
+  padding: 44px 48px;
+  background-color: var(--muhar-bg, #FAF7F2);
+  position: relative;
+  z-index: 2;
+}
+
+.muhar-home-footer__container {
+  max-width: 1360px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.muhar-home-footer__brand {
+  font-family: var(--muhar-font-brand, 'Bodoni Moda', 'Playfair Display', Georgia, serif);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muhar-text, #24211E);
+  text-decoration: none;
+}
+
+.muhar-home-footer__copy {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 11.5px;
+  font-weight: 350;
+  color: var(--muhar-text-muted, #6B6560);
+  letter-spacing: 0.03em;
+  margin: 0;
+}
+
+/* Floating Back-To-Top Button */
+.muhar-back-to-top {
+  position: fixed;
+  right: 32px;
+  bottom: 32px;
+  width: 44px;
+  height: 44px;
+  background-color: var(--muhar-bg, #FAF7F2);
+  border: 1px solid rgba(36, 33, 30, 0.16);
+  color: var(--muhar-text, #24211E);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 99;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(12px);
+  transition: opacity 300ms ease, visibility 300ms ease, transform 300ms ease, background-color 250ms ease;
+}
+
+.muhar-back-to-top.is-visible {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.muhar-back-to-top:hover {
+  background-color: var(--muhar-text, #24211E);
+  color: var(--muhar-bg, #FAF7F2);
+}
+
+.muhar-back-to-top__arrow {
+  font-size: 16px;
+  line-height: 1;
+}
+
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .muhar-consultation {
+    padding: 100px 36px 80px;
+  }
+
+  .muhar-consultation__top-divider,
+  .muhar-contact-section__divider {
+    margin-bottom: 64px;
+  }
+
+  .muhar-consultation__grid,
+  .muhar-contact-section__grid {
+    grid-template-columns: 1fr;
+    gap: 64px;
+  }
+
+  .muhar-consultation__info-col,
+  .muhar-contact-section__intro-col {
+    max-width: 100%;
+  }
+
+  .muhar-consultation__title {
+    font-size: clamp(32px, 3.4vw, 44px);
+  }
+
+  .muhar-contact-section {
+    padding: 80px 36px 120px;
+  }
+
+  .muhar-contact-section__title {
+    font-size: clamp(34px, 4vw, 50px);
+  }
+
+  .muhar-home-footer {
+    padding: 36px 36px;
+  }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+  .muhar-consultation {
+    padding: 75px 20px 60px;
+  }
+
+  .muhar-consultation__top-divider,
+  .muhar-contact-section__divider {
+    margin-bottom: 40px;
+  }
+
+  .muhar-consultation__grid,
+  .muhar-contact-section__grid {
+    gap: 40px;
+  }
+
+  .muhar-consultation__eyebrow,
+  .muhar-contact-section__eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    margin-bottom: 14px;
+  }
+
+  .muhar-consultation__title {
+    font-size: clamp(28px, 7.2vw, 36px);
+    line-height: 1.18;
+    margin-bottom: 16px;
+  }
+
+  .muhar-consultation__copy {
+    font-size: 13.5px;
+    line-height: 1.68;
+  }
+
+  .muhar-form-row {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .muhar-consultation-form {
+    gap: 22px;
+  }
+
+  /* Prevent iOS Safari auto-zoom on input focus */
+  .muhar-form-input,
+  .muhar-form-select,
+  .muhar-form-textarea {
+    font-size: 16px;
+    padding: 12px 0;
+  }
+
+  .muhar-form-submit-btn {
+    width: 100%;
+    max-width: 320px;
+    min-height: 48px;
+    padding: 15px 24px;
+    text-align: center;
+  }
+
+  .muhar-contact-section {
+    padding: 60px 20px 90px;
+  }
+
+  .muhar-contact-section__watermark {
+    display: none; /* Avoid visual clutter and horizontal overflow on small devices */
+  }
+
+  .muhar-contact-section__title {
+    font-size: clamp(30px, 7.5vw, 38px);
+    line-height: 1.15;
+    margin-bottom: 16px;
+  }
+
+  .muhar-contact-section__copy {
+    font-size: 14px;
+    line-height: 1.68;
+    margin-bottom: 28px;
+  }
+
+  .muhar-contact-detail-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 18px 0;
+  }
+
+  .muhar-contact-detail-row__label {
+    font-size: 9.5px;
+  }
+
+  .muhar-contact-detail-row__value {
+    font-size: 15px;
+  }
+
+  .muhar-contact-actions-wrap {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .muhar-contact-action-btn {
+    justify-content: center;
+    padding: 15px 20px;
+    min-height: 48px;
+  }
+
+  .muhar-home-footer {
+    padding: 32px 20px;
+  }
+
+  .muhar-home-footer__container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+  }
+}
+
+@media (max-width: 360px) {
+  .muhar-consultation {
+    padding: 60px 16px 50px;
+  }
+
+  .muhar-contact-section {
+    padding: 50px 16px 75px;
+  }
+
+  .muhar-consultation__title {
+    font-size: 26px;
+  }
+
+  .muhar-contact-section__title {
+    font-size: 27px;
+  }
+}
+

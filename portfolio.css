@@ -1,0 +1,479 @@
+/* ==========================================================================
+   MUHAR STUDIO — Luxury Asymmetric Editorial Portfolio / Selected Work
+   ========================================================================== */
+
+.muhar-portfolio {
+  width: 100%;
+  background-color: var(--muhar-bg, #FAF7F2);
+  color: var(--muhar-text, #24211E);
+  padding: 110px 48px 130px;
+  position: relative;
+  box-sizing: border-box;
+}
+
+.muhar-portfolio__container {
+  max-width: 1360px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* ==========================================================================
+   Section Header (Asymmetric Left-Aligned with Refined Spacing)
+   ========================================================================== */
+.muhar-portfolio__header {
+  margin-bottom: 64px;
+  max-width: 580px;
+}
+
+.muhar-portfolio__title {
+  font-family: var(--muhar-hero-font-serif, 'Cormorant Garamond', 'Playfair Display', Georgia, serif);
+  font-size: clamp(34px, 3.4vw, 48px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muhar-text, #24211E);
+  margin-bottom: 14px;
+}
+
+.muhar-portfolio__subtitle {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: clamp(13.5px, 1.05vw, 15.5px);
+  font-weight: 350;
+  line-height: 1.6;
+  color: var(--muhar-text-muted, #6B6560);
+  letter-spacing: 0.01em;
+  max-width: 440px;
+}
+
+/* ==========================================================================
+   Asymmetric Gallery Layout (Cohesive Visual Composition)
+   ========================================================================== */
+.muhar-portfolio__gallery {
+  display: flex;
+  flex-direction: column;
+  gap: 80px; /* Reduced vertical gap for cohesive visual flow */
+  width: 100%;
+}
+
+/* Base Project Item */
+.muhar-project-card {
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  position: relative;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* Image Frame (Architectural sharp corners, no borders/cards) */
+.muhar-project-card__frame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  background-color: #EAE5DE;
+  border-radius: 0;
+  border: none;
+  box-shadow: 0 4px 20px -6px rgba(36, 33, 30, 0.04);
+  transform: translateY(0);
+  transition: box-shadow 500ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Dark translucent tint overlay appearing on hover */
+.muhar-project-card__frame::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(18, 16, 14, 0.26);
+  opacity: 0;
+  z-index: 1;
+  transition: opacity 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+}
+
+.muhar-project-card:hover .muhar-project-card__frame {
+  transform: translateY(-5px);
+  box-shadow: 0 24px 48px -12px rgba(36, 33, 30, 0.16);
+}
+
+.muhar-project-card:hover .muhar-project-card__frame::before {
+  opacity: 1;
+}
+
+.muhar-project-card__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 0;
+  transform: scale3d(1, 1, 1);
+  transition: transform 700ms cubic-bezier(0.16, 1, 0.3, 1),
+              filter 450ms ease,
+              opacity 450ms ease;
+  will-change: transform;
+}
+
+/* Subtle View Project Hover Overlay Pill */
+.muhar-project-card__overlay-action {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(20, 18, 16, 0.88);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #FFFFFF;
+  padding: 10px 18px;
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 350ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 350ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 350ms ease;
+  pointer-events: none;
+  z-index: 2;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* Clear, refined 1.05 scale and overlay reveal on all project images */
+.muhar-project-card:hover .muhar-project-card__img {
+  transform: scale3d(1.05, 1.05, 1);
+}
+
+.muhar-project-card:hover .muhar-project-card__overlay-action {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.muhar-project-card:focus-visible {
+  outline: none;
+}
+
+.muhar-project-card:focus-visible .muhar-project-card__frame {
+  transform: translateY(-5px);
+  box-shadow: 0 0 0 2px var(--muhar-bg, #FAF7F2), 0 0 0 4px var(--muhar-text, #24211E), 0 24px 48px -12px rgba(36, 33, 30, 0.16);
+}
+
+.muhar-project-card:focus-visible .muhar-project-card__overlay-action {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Understated, Minimal Project Labels */
+.muhar-project-card__info {
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.muhar-project-card__number {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muhar-text, #24211E);
+  line-height: 1.2;
+  transition: color 250ms ease, transform 250ms ease;
+}
+
+.muhar-project-card:hover .muhar-project-card__number {
+  color: #0E0C0A;
+  font-weight: 600;
+  transform: translateX(2px);
+}
+
+.muhar-project-card__category {
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 11.5px;
+  font-weight: 400;
+  color: var(--muhar-text-muted, #756F68);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+  transition: color 250ms ease;
+}
+
+.muhar-project-card:hover .muhar-project-card__category {
+  color: #4A443E;
+}
+
+/* ==========================================================================
+   ROW-SPECIFIC ASYMMETRIC COMPOSITION
+   ========================================================================== */
+
+/* --- ROW 1 ---
+   Image 1: Large Dominant (~60% width)
+   Image 2: Smaller (~33% width, vertically offset)
+*/
+.muhar-portfolio__row--1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.muhar-project-card--row1-left {
+  width: 60%;
+}
+
+.muhar-project-card--row1-left .muhar-project-card__frame {
+  aspect-ratio: 16 / 11;
+}
+
+.muhar-project-card--row1-right {
+  width: 33%;
+  margin-top: 48px; /* Refined vertical offset */
+}
+
+.muhar-project-card--row1-right .muhar-project-card__frame {
+  aspect-ratio: 4 / 5;
+}
+
+/* --- ROW 2 ---
+   Image 3: Smaller portrait (~34% width)
+   Image 4: Large dominant (~58% width, shifted lower)
+*/
+.muhar-portfolio__row--2 {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.muhar-project-card--row2-left {
+  width: 34%;
+}
+
+.muhar-project-card--row2-left .muhar-project-card__frame {
+  aspect-ratio: 3 / 4;
+}
+
+.muhar-project-card--row2-right {
+  width: 58%;
+  margin-top: 56px; /* Balanced vertical offset */
+}
+
+.muhar-project-card--row2-right .muhar-project-card__frame {
+  aspect-ratio: 16 / 10;
+}
+
+/* --- ROW 3 ---
+   Image 5: Large (~58% width)
+   Image 6: Smaller (~33% width, positioned slightly lower)
+*/
+.muhar-portfolio__row--3 {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.muhar-project-card--row3-left {
+  width: 58%;
+}
+
+.muhar-project-card--row3-left .muhar-project-card__frame {
+  aspect-ratio: 16 / 11;
+}
+
+.muhar-project-card--row3-right {
+  width: 33%;
+  margin-top: 52px; /* Balanced vertical offset */
+}
+
+.muhar-project-card--row3-right .muhar-project-card__frame {
+  aspect-ratio: 4 / 5;
+}
+
+/* ==========================================================================
+   Full Portfolio CTA Button
+   ========================================================================== */
+.muhar-portfolio__cta-wrap {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 72px;
+  width: 100%;
+}
+
+.muhar-portfolio__cta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 16px 36px;
+  border: 1px solid var(--muhar-text, #24211E);
+  background-color: transparent;
+  color: var(--muhar-text, #24211E);
+  font-family: var(--muhar-hero-font-sans, 'Plus Jakarta Sans', sans-serif);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 0;
+  cursor: pointer;
+  position: relative;
+  transition: background-color 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+              color 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+              border-color 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+              transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.muhar-portfolio__cta-btn:hover {
+  background-color: var(--muhar-text, #24211E);
+  color: var(--muhar-bg, #FAF7F2);
+  transform: translateY(-2px);
+}
+
+.muhar-portfolio__cta-arrow {
+  display: inline-block;
+  font-size: 13px;
+  transition: transform 0.35s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.muhar-portfolio__cta-btn:hover .muhar-portfolio__cta-arrow {
+  transform: translateX(4px);
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .muhar-portfolio {
+    padding: 90px 36px 110px;
+  }
+
+  .muhar-portfolio__header {
+    margin-bottom: 50px;
+  }
+
+  .muhar-portfolio__gallery {
+    gap: 60px;
+  }
+
+  .muhar-project-card--row1-right {
+    margin-top: 36px;
+  }
+
+  .muhar-project-card--row2-right {
+    margin-top: 40px;
+  }
+
+  .muhar-project-card--row3-right {
+    margin-top: 36px;
+  }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+  .muhar-portfolio {
+    padding: 70px 20px 90px;
+  }
+
+  .muhar-portfolio__header {
+    margin-bottom: 40px;
+  }
+
+  .muhar-portfolio__title {
+    font-size: clamp(28px, 7vw, 36px);
+    letter-spacing: 0.04em;
+    margin-bottom: 10px;
+  }
+
+  .muhar-portfolio__subtitle {
+    font-size: 13px;
+    line-height: 1.55;
+  }
+
+  /* Single-column clean editorial layout */
+  .muhar-portfolio__gallery {
+    gap: 40px;
+  }
+
+  .muhar-portfolio__row {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .muhar-project-card {
+    width: 100% !important;
+    margin-top: 0 !important;
+    align-self: stretch !important;
+  }
+
+  .muhar-project-card--row1-left .muhar-project-card__frame {
+    aspect-ratio: 16 / 11;
+  }
+
+  .muhar-project-card--row1-right .muhar-project-card__frame {
+    aspect-ratio: 4 / 5;
+  }
+
+  .muhar-project-card--row2-left .muhar-project-card__frame {
+    aspect-ratio: 3 / 4;
+  }
+
+  .muhar-project-card--row2-right .muhar-project-card__frame {
+    aspect-ratio: 16 / 11;
+  }
+
+  .muhar-project-card--row3-left .muhar-project-card__frame {
+    aspect-ratio: 16 / 11;
+  }
+
+  .muhar-project-card--row3-right .muhar-project-card__frame {
+    aspect-ratio: 4 / 5;
+  }
+
+  .muhar-project-card__overlay-action {
+    display: none; /* Keep clean on touch screens */
+  }
+
+  .muhar-project-card__info {
+    margin-top: 12px;
+  }
+
+  .muhar-portfolio__cta-wrap {
+    margin-top: 48px;
+  }
+
+  .muhar-portfolio__cta-btn {
+    width: 100%;
+    max-width: 320px;
+    padding: 15px 24px;
+    text-align: center;
+  }
+}
+
+@media (max-width: 360px) {
+  .muhar-portfolio {
+    padding: 60px 16px 75px;
+  }
+
+  .muhar-portfolio__title {
+    font-size: 26px;
+  }
+
+  .muhar-portfolio__gallery {
+    gap: 32px;
+  }
+
+  .muhar-portfolio__row {
+    gap: 32px;
+  }
+}
+

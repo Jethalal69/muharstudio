@@ -1,0 +1,705 @@
+/* ==========================================================================
+   MUHAR STUDIO — Service Detail Page Stylesheet
+   Matches exact editorial typography, colors, spacing, and minimalism.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600;6..96,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --muhar-bg: #FAF7F2;
+  --muhar-text: #24211E;
+  --muhar-text-muted: #6B6560;
+  --muhar-line: rgba(36, 33, 30, 0.14);
+  --muhar-line-strong: #24211E;
+  --muhar-font-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --muhar-font-brand: 'Bodoni Moda', 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --muhar-font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --muhar-ease: cubic-bezier(0.25, 1, 0.5, 1);
+  --muhar-container-max: 1360px;
+}
+
+/* Global Reset for Service Pages */
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--muhar-bg);
+  color: var(--muhar-text);
+  font-family: var(--muhar-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Main Container */
+.muhar-sdetail-container {
+  max-width: var(--muhar-container-max);
+  margin: 0 auto;
+  padding: 0 48px;
+  box-sizing: border-box;
+}
+
+/* ==========================================================================
+   1. Service Breadcrumb & Meta Bar
+   ========================================================================== */
+.muhar-sdetail-breadcrumb-bar {
+  padding: 36px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.muhar-sdetail-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--muhar-font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted);
+  text-decoration: none;
+  transition: color 250ms var(--muhar-ease), transform 250ms var(--muhar-ease);
+}
+
+.muhar-sdetail-back-link:hover {
+  color: var(--muhar-text);
+  transform: translateX(-4px);
+}
+
+.muhar-sdetail-num-badge {
+  font-family: var(--muhar-font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.20em;
+  color: var(--muhar-text-muted);
+}
+
+/* ==========================================================================
+   2. Service Hero Section
+   ========================================================================== */
+.muhar-sdetail-hero {
+  padding: 48px 0 64px;
+}
+
+.muhar-sdetail-hero__eyebrow {
+  display: block;
+  font-family: var(--muhar-font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted);
+  margin-bottom: 18px;
+}
+
+.muhar-sdetail-hero__title {
+  font-family: var(--muhar-font-serif);
+  font-size: clamp(38px, 5.2vw, 68px);
+  font-weight: 400;
+  line-height: 1.08;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muhar-text);
+  margin: 0 0 24px;
+  max-width: 900px;
+}
+
+.muhar-sdetail-hero__lead {
+  font-family: var(--muhar-font-sans);
+  font-size: clamp(15px, 1.25vw, 18px);
+  font-weight: 350;
+  line-height: 1.65;
+  color: var(--muhar-text-muted);
+  letter-spacing: 0.01em;
+  max-width: 680px;
+  margin: 0;
+}
+
+/* ==========================================================================
+   3. Large Visual Showcase
+   ========================================================================== */
+.muhar-sdetail-visual {
+  width: 100%;
+  margin: 0 0 100px;
+}
+
+.muhar-sdetail-visual__frame {
+  width: 100%;
+  height: clamp(360px, 55vh, 680px);
+  overflow: hidden;
+  position: relative;
+  background-color: #EFECE6;
+}
+
+.muhar-sdetail-visual__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 50%;
+  display: block;
+}
+
+.muhar-sdetail-visual__caption {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 4px 0;
+  font-family: var(--muhar-font-sans);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted);
+}
+
+/* ==========================================================================
+   4. Editorial Quote / Statement Section
+   ========================================================================== */
+.muhar-sdetail-statement {
+  padding: 80px 0;
+  border-top: 1px solid var(--muhar-line);
+  border-bottom: 1px solid var(--muhar-line);
+  margin-bottom: 110px;
+}
+
+.muhar-sdetail-statement__inner {
+  max-width: 1060px;
+}
+
+.muhar-sdetail-statement__quote {
+  font-family: var(--muhar-font-serif);
+  font-size: clamp(26px, 2.8vw, 42px);
+  font-weight: 400;
+  line-height: 1.32;
+  letter-spacing: 0.02em;
+  color: var(--muhar-text);
+  margin: 0;
+  position: relative;
+}
+
+.muhar-sdetail-statement__meta {
+  display: block;
+  font-family: var(--muhar-font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted);
+  margin-top: 24px;
+}
+
+/* ==========================================================================
+   5. Scope / What It Includes Section
+   ========================================================================== */
+.muhar-sdetail-scope {
+  padding-bottom: 120px;
+}
+
+.muhar-sdetail-scope__grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.muhar-sdetail-scope__header {
+  position: sticky;
+  top: 100px;
+}
+
+.muhar-sdetail-section-eyebrow {
+  display: block;
+  font-family: var(--muhar-font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted);
+  margin-bottom: 14px;
+}
+
+.muhar-sdetail-section-title {
+  font-family: var(--muhar-font-serif);
+  font-size: clamp(30px, 3.0vw, 44px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muhar-text);
+  margin: 0 0 16px;
+}
+
+.muhar-sdetail-section-desc {
+  font-family: var(--muhar-font-sans);
+  font-size: 14px;
+  font-weight: 350;
+  line-height: 1.6;
+  color: var(--muhar-text-muted);
+  margin: 0;
+  max-width: 320px;
+}
+
+.muhar-sdetail-scope__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.muhar-sdetail-scope__item {
+  position: relative;
+  padding: 32px 0;
+  border-top: 1px solid var(--muhar-line);
+}
+
+.muhar-sdetail-scope__item:last-child {
+  border-bottom: 1px solid var(--muhar-line);
+}
+
+.muhar-sdetail-scope__item-inner {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 20px;
+  align-items: baseline;
+}
+
+.muhar-sdetail-scope__item-num {
+  font-family: var(--muhar-font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: var(--muhar-text-muted);
+}
+
+.muhar-sdetail-scope__item-title {
+  font-family: var(--muhar-font-serif);
+  font-size: clamp(20px, 1.8vw, 26px);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--muhar-text);
+  margin: 0 0 8px;
+}
+
+.muhar-sdetail-scope__item-desc {
+  font-family: var(--muhar-font-sans);
+  font-size: 14px;
+  font-weight: 350;
+  line-height: 1.6;
+  color: var(--muhar-text-muted);
+  margin: 0;
+  max-width: 620px;
+}
+
+/* ==========================================================================
+   6. Process Section (Editorial Steps)
+   ========================================================================== */
+.muhar-sdetail-process {
+  padding-bottom: 130px;
+}
+
+.muhar-sdetail-process__header {
+  margin-bottom: 60px;
+  max-width: 560px;
+}
+
+.muhar-sdetail-process__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 32px;
+}
+
+.muhar-sdetail-step {
+  position: relative;
+  padding-top: 28px;
+  border-top: 1px solid var(--muhar-line);
+  transition: border-color 300ms ease;
+}
+
+.muhar-sdetail-step:hover {
+  border-top-color: var(--muhar-line-strong);
+}
+
+.muhar-sdetail-step__number {
+  display: block;
+  font-family: var(--muhar-font-sans);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  color: var(--muhar-text-muted);
+  margin-bottom: 18px;
+}
+
+.muhar-sdetail-step__title {
+  font-family: var(--muhar-font-serif);
+  font-size: clamp(19px, 1.6vw, 24px);
+  font-weight: 400;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--muhar-text);
+  margin: 0 0 12px;
+  line-height: 1.2;
+}
+
+.muhar-sdetail-step__desc {
+  font-family: var(--muhar-font-sans);
+  font-size: 13.5px;
+  font-weight: 350;
+  line-height: 1.6;
+  color: var(--muhar-text-muted);
+  margin: 0;
+}
+
+/* ==========================================================================
+   7. Service Switcher / Navigation
+   ========================================================================== */
+.muhar-sdetail-switcher {
+  padding: 60px 0;
+  border-top: 1px solid var(--muhar-line);
+  border-bottom: 1px solid var(--muhar-line);
+  margin-bottom: 120px;
+}
+
+.muhar-sdetail-switcher__label {
+  display: block;
+  font-family: var(--muhar-font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted);
+  margin-bottom: 32px;
+}
+
+.muhar-sdetail-switcher__list {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+}
+
+.muhar-sdetail-switch-card {
+  display: block;
+  padding: 24px 28px;
+  background-color: rgba(244, 239, 235, 0.45);
+  border: 1px solid rgba(36, 33, 30, 0.08);
+  text-decoration: none;
+  transition: background-color 300ms var(--muhar-ease), border-color 300ms var(--muhar-ease), transform 300ms var(--muhar-ease);
+}
+
+.muhar-sdetail-switch-card:hover {
+  background-color: rgba(244, 239, 235, 0.9);
+  border-color: rgba(36, 33, 30, 0.22);
+  transform: translateY(-3px);
+}
+
+.muhar-sdetail-switch-card__num {
+  display: block;
+  font-family: var(--muhar-font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  color: var(--muhar-text-muted);
+  margin-bottom: 10px;
+}
+
+.muhar-sdetail-switch-card__title {
+  font-family: var(--muhar-font-serif);
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muhar-text);
+  margin: 0 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.muhar-sdetail-switch-card__arrow {
+  font-family: var(--muhar-font-sans);
+  font-size: 16px;
+  font-weight: 300;
+  transition: transform 300ms var(--muhar-ease);
+}
+
+.muhar-sdetail-switch-card:hover .muhar-sdetail-switch-card__arrow {
+  transform: translateX(4px);
+}
+
+/* ==========================================================================
+   8. Final Call to Action
+   ========================================================================== */
+.muhar-sdetail-cta {
+  padding: 100px 0 130px;
+  text-align: center;
+  background-color: var(--muhar-bg);
+}
+
+.muhar-sdetail-cta__eyebrow {
+  display: block;
+  font-family: var(--muhar-font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted);
+  margin-bottom: 16px;
+}
+
+.muhar-sdetail-cta__title {
+  font-family: var(--muhar-font-serif);
+  font-size: clamp(34px, 4.2vw, 56px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muhar-text);
+  margin: 0 auto 36px;
+  max-width: 720px;
+}
+
+.muhar-sdetail-cta__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background-color: var(--muhar-text);
+  color: #FFFFFF;
+  font-family: var(--muhar-font-sans);
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  text-decoration: none;
+  padding: 16px 36px;
+  border-radius: 0;
+  transition: background-color 300ms var(--muhar-ease), transform 300ms var(--muhar-ease), opacity 300ms var(--muhar-ease);
+}
+
+.muhar-sdetail-cta__btn:hover {
+  background-color: #000000;
+  transform: translateY(-2px);
+  opacity: 0.95;
+}
+
+.muhar-sdetail-cta__arrow {
+  font-size: 14px;
+  transition: transform 300ms var(--muhar-ease);
+}
+
+.muhar-sdetail-cta__btn:hover .muhar-sdetail-cta__arrow {
+  transform: translateX(4px);
+}
+
+/* ==========================================================================
+   9. Footer Styles provided globally by footer.css
+   ========================================================================== */
+
+/* ==========================================================================
+   10. Responsive Breakpoints
+   ========================================================================== */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .muhar-sdetail-container {
+    padding: 0 36px;
+  }
+
+  .muhar-sdetail-scope__grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .muhar-sdetail-scope__header {
+    position: static;
+  }
+
+  .muhar-sdetail-process__grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 28px;
+  }
+
+  .muhar-sdetail-switcher__list {
+    grid-template-columns: 1fr;
+  }
+
+  .muhar-footer {
+    padding: 36px 36px;
+  }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+  .muhar-sdetail-container {
+    padding: 0 20px;
+  }
+
+  .muhar-sdetail-breadcrumb-bar {
+    padding: 24px 0 0;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .muhar-sdetail-hero {
+    padding: 32px 0 40px;
+  }
+
+  .muhar-sdetail-hero__eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    margin-bottom: 12px;
+  }
+
+  .muhar-sdetail-hero__title {
+    font-size: clamp(28px, 7.5vw, 42px);
+    line-height: 1.12;
+    margin-bottom: 16px;
+  }
+
+  .muhar-sdetail-hero__lead {
+    font-size: 13.5px;
+    line-height: 1.62;
+  }
+
+  .muhar-sdetail-visual {
+    margin-bottom: 50px;
+  }
+
+  .muhar-sdetail-visual__frame {
+    height: clamp(240px, 48vw, 320px);
+  }
+
+  .muhar-sdetail-visual__caption {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+    font-size: 9.5px;
+  }
+
+  .muhar-sdetail-statement {
+    padding: 44px 0;
+    margin-bottom: 60px;
+  }
+
+  .muhar-sdetail-statement__quote {
+    font-size: clamp(20px, 5.2vw, 28px);
+    line-height: 1.35;
+  }
+
+  .muhar-sdetail-statement__meta {
+    font-size: 9.5px;
+    margin-top: 16px;
+  }
+
+  .muhar-sdetail-scope {
+    padding-bottom: 65px;
+  }
+
+  .muhar-sdetail-section-title {
+    font-size: clamp(24px, 6vw, 32px);
+  }
+
+  .muhar-sdetail-section-desc {
+    font-size: 13px;
+  }
+
+  .muhar-sdetail-scope__item {
+    padding: 24px 0;
+  }
+
+  .muhar-sdetail-scope__item-inner {
+    grid-template-columns: 28px 1fr;
+    gap: 10px;
+  }
+
+  .muhar-sdetail-scope__item-title {
+    font-size: 18px;
+  }
+
+  .muhar-sdetail-scope__item-desc {
+    font-size: 13px;
+    line-height: 1.58;
+  }
+
+  .muhar-sdetail-process {
+    padding-bottom: 65px;
+  }
+
+  .muhar-sdetail-process__header {
+    margin-bottom: 36px;
+  }
+
+  .muhar-sdetail-process__grid {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .muhar-sdetail-step {
+    padding-top: 20px;
+  }
+
+  .muhar-sdetail-step__title {
+    font-size: 18px;
+  }
+
+  .muhar-sdetail-step__desc {
+    font-size: 13px;
+  }
+
+  .muhar-sdetail-switcher {
+    padding: 40px 0;
+    margin-bottom: 60px;
+  }
+
+  .muhar-sdetail-switcher__label {
+    margin-bottom: 20px;
+  }
+
+  .muhar-sdetail-switch-card {
+    padding: 20px 20px;
+  }
+
+  .muhar-sdetail-switch-card__title {
+    font-size: 16px;
+  }
+
+  .muhar-sdetail-cta {
+    padding: 60px 0 80px;
+  }
+
+  .muhar-sdetail-cta__title {
+    font-size: clamp(28px, 7vw, 38px);
+    margin-bottom: 24px;
+  }
+
+  .muhar-sdetail-cta__btn {
+    width: 100%;
+    max-width: 320px;
+    justify-content: center;
+    padding: 15px 24px;
+  }
+
+  }
+
+@media (max-width: 360px) {
+  .muhar-sdetail-container {
+    padding: 0 16px;
+  }
+
+  .muhar-sdetail-hero__title {
+    font-size: 26px;
+  }
+
+  .muhar-sdetail-statement__quote {
+    font-size: 19px;
+  }
+
+  .muhar-sdetail-section-title,
+  .muhar-sdetail-cta__title {
+    font-size: 24px;
+  }
+
+  .muhar-sdetail-switch-card {
+    padding: 16px 16px;
+  }
+}
+

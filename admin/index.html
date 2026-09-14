@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inquiries Dashboard — MUHAR STUDIO</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="/admin/admin.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <nav class="admin-navbar">
+    <div class="admin-navbar__inner">
+      <a href="/admin" class="admin-navbar__brand">
+        <span class="admin-navbar__logo">MUHAR STUDIO</span>
+        <span class="admin-navbar__badge">ADMIN PORTAL</span>
+      </a>
+
+      <div class="admin-navbar__actions">
+        <span class="admin-user-tag">Signed in as <strong id="admin-user-display">Admin</strong></span>
+        <a href="/" target="_blank" class="admin-btn-outline" title="Open Public Website">View Site &rarr;</a>
+        <button id="admin-logout-btn" class="admin-btn-outline">LOGOUT</button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Container -->
+  <main class="admin-container">
+    
+    <!-- Page Header -->
+    <header class="admin-header">
+      <h1 class="admin-header__title">Client Inquiries &amp; Consultations</h1>
+      <p class="admin-header__subtitle">Manage incoming architectural project inquiries, budget briefs, and client requests.</p>
+    </header>
+
+    <!-- KPI Stat Cards -->
+    <section class="admin-stats-grid" aria-label="Inquiry Overview Statistics">
+      <div class="admin-stat-card admin-stat-card--highlight">
+        <span class="admin-stat-card__label">New / Pending</span>
+        <div class="admin-stat-card__value" id="stat-new">0</div>
+      </div>
+
+      <div class="admin-stat-card">
+        <span class="admin-stat-card__label">Consultations</span>
+        <div class="admin-stat-card__value" id="stat-consultations">0</div>
+      </div>
+
+      <div class="admin-stat-card">
+        <span class="admin-stat-card__label">Contact Messages</span>
+        <div class="admin-stat-card__value" id="stat-contacts">0</div>
+      </div>
+
+      <div class="admin-stat-card">
+        <span class="admin-stat-card__label">Contacted</span>
+        <div class="admin-stat-card__value" id="stat-contacted">0</div>
+      </div>
+
+      <div class="admin-stat-card">
+        <span class="admin-stat-card__label">Total Inquiries</span>
+        <div class="admin-stat-card__value" id="stat-total">0</div>
+      </div>
+    </section>
+
+    <!-- Filter & Search Toolbar -->
+    <div class="admin-toolbar">
+      <div class="admin-toolbar__left">
+        
+        <!-- Type Filter -->
+        <div class="admin-filter-pill-group" role="tablist" aria-label="Filter by type">
+          <button class="admin-filter-pill is-active" data-type="all">All Inquiries</button>
+          <button class="admin-filter-pill" data-type="consultation">Consultations</button>
+          <button class="admin-filter-pill" data-type="contact">Contact Messages</button>
+        </div>
+
+        <!-- Status Filter -->
+        <select id="filter-status" class="admin-select" aria-label="Filter by status">
+          <option value="all">All Statuses</option>
+          <option value="new">New / Pending</option>
+          <option value="contacted">Contacted</option>
+          <option value="archived">Archived</option>
+        </select>
+
+        <!-- Sort -->
+        <select id="filter-sort" class="admin-select" aria-label="Sort order">
+          <option value="newest">Sort: Newest First</option>
+          <option value="oldest">Sort: Oldest First</option>
+        </select>
+
+      </div>
+
+      <div class="admin-toolbar__right">
+        <!-- Live Search -->
+        <input 
+          type="search" 
+          id="admin-search" 
+          class="admin-search-input" 
+          placeholder="Search by client, email, phone..."
+          aria-label="Search inquiries"
+        />
+        <button id="admin-refresh-btn" class="admin-btn-outline" title="Refresh List">&#x21bb; Refresh</button>
+      </div>
+    </div>
+
+    <!-- Data Table Card -->
+    <div class="admin-table-card">
+      <div class="admin-table-responsive">
+        <table class="admin-table" id="inquiries-table">
+          <thead>
+            <tr>
+              <th width="60">ID</th>
+              <th width="120">Type</th>
+              <th width="220">Client Info</th>
+              <th>Project &amp; Budget</th>
+              <th width="140">Date / Time</th>
+              <th width="120">Status</th>
+              <th width="160" style="text-align: right;">Actions</th>
+            </tr>
+          </thead>
+          <tbody id="inquiries-tbody">
+            <!-- Dynamically populated rows -->
+            <tr>
+              <td colspan="7" class="admin-empty-state">
+                <span class="admin-empty-state__icon">&hellip;</span>
+                <p class="admin-empty-state__title">Loading inquiries...</p>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Detail Modal / Drawer -->
+  <div class="admin-modal-backdrop" id="detail-modal-backdrop" aria-hidden="true">
+    <div class="admin-modal" role="dialog" aria-labelledby="modal-client-name" aria-modal="true">
+      
+      <div class="admin-modal__header">
+        <div>
+          <div style="display: flex; gap: 8px; align-items: center; margin-bottom: 6px; flex-wrap: wrap;">
+            <span class="admin-badge-type" id="modal-type-badge">CONSULTATION</span>
+            <span class="admin-badge-status" id="modal-status-badge">NEW</span>
+          </div>
+          <h2 class="admin-login-brand__title" style="font-size: 22px;" id="modal-client-name">Client Name</h2>
+        </div>
+        <button class="admin-modal__close" id="modal-close-btn" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <div class="admin-detail-grid">
+        <div class="admin-detail-item">
+          <span class="admin-detail-item__label">Email Address</span>
+          <span class="admin-detail-item__val" id="modal-email">-</span>
+        </div>
+
+        <div class="admin-detail-item">
+          <span class="admin-detail-item__label">Phone Number</span>
+          <span class="admin-detail-item__val" id="modal-phone">-</span>
+        </div>
+
+        <div class="admin-detail-item">
+          <span class="admin-detail-item__label">Enquiry Type</span>
+          <span class="admin-detail-item__val" id="modal-type-text">-</span>
+        </div>
+
+        <div class="admin-detail-item">
+          <span class="admin-detail-item__label">Current Status</span>
+          <span class="admin-detail-item__val" id="modal-status-text">-</span>
+        </div>
+
+        <div class="admin-detail-item">
+          <span class="admin-detail-item__label">Project Type</span>
+          <span class="admin-detail-item__val" id="modal-project">-</span>
+        </div>
+
+        <div class="admin-detail-item">
+          <span class="admin-detail-item__label">Budget Range</span>
+          <span class="admin-detail-item__val" id="modal-budget">-</span>
+        </div>
+
+        <div class="admin-detail-item">
+          <span class="admin-detail-item__label">Submitted At</span>
+          <span class="admin-detail-item__val" id="modal-date">-</span>
+        </div>
+
+        <div class="admin-detail-item">
+          <span class="admin-detail-item__label">Client IP Address</span>
+          <span class="admin-detail-item__val" id="modal-ip">-</span>
+        </div>
+
+        <div class="admin-detail-item" style="grid-column: 1 / -1;">
+          <span class="admin-detail-item__label">User Agent / Device</span>
+          <span class="admin-detail-item__val" id="modal-user-agent" style="word-break: break-all; font-size: 12px; color: var(--muhar-text-muted);">-</span>
+        </div>
+      </div>
+
+      <div class="admin-detail-message-box">
+        <span class="admin-detail-message-box__title">Client Message &amp; Brief</span>
+        <p class="admin-detail-message-box__text" id="modal-message">-</p>
+      </div>
+
+      <div class="admin-modal__actions">
+        <button class="admin-btn-action" id="modal-status-new" data-status="new">Mark as New</button>
+        <button class="admin-btn-action admin-btn-action--primary" id="modal-status-contacted" data-status="contacted">Mark as Contacted</button>
+        <button class="admin-btn-action" id="modal-status-archived" data-status="archived">Archive</button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Toast Alert -->
+  <div class="admin-toast" id="admin-toast" role="status" aria-live="polite"></div>
+
+  <!-- Dashboard Script -->
+  <script src="/admin/admin.js"></script>
+
+</body>
+</html>

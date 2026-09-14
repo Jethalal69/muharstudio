@@ -1,0 +1,376 @@
+/* ==========================================================================
+   MUHAR STUDIO — Luxury Editorial Hero with Text Overlay
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --muhar-hero-text-white: #FFFFFF;
+  --muhar-hero-text-soft: rgba(255, 255, 255, 0.85);
+  --muhar-hero-text-meta: rgba(255, 255, 255, 0.75);
+  --muhar-hero-text-eyebrow: rgba(255, 255, 255, 0.85);
+  --muhar-hero-font-serif: 'Cormorant Garamond', 'Playfair Display', Garamond, 'Times New Roman', serif;
+  --muhar-hero-font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --muhar-hero-ease: cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+/* Full-Width Hero Stage */
+.muhar-hero-stage {
+  position: relative;
+  width: 100%;
+  height: calc(100vh - var(--muhar-height-desktop, 68px));
+  min-height: 620px;
+  overflow: hidden;
+  display: flex;
+  align-items: stretch;
+  background-color: #161412;
+}
+
+/* Full-Width Background Image Canvas */
+.muhar-hero-stage__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+.muhar-hero-stage__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 60%;
+  display: block;
+  opacity: 0;
+  animation: muharHeroImgFade 1.2s var(--muhar-hero-ease) 0.1s forwards;
+}
+
+/* Seamless Left-Side Vignette Scrim (Natural, Blended, No Hard Box) */
+.muhar-hero-stage__scrim {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(14, 12, 10, 0.62) 0%,
+    rgba(14, 12, 10, 0.44) 34%,
+    rgba(14, 12, 10, 0.18) 58%,
+    rgba(14, 12, 10, 0) 80%
+  );
+}
+
+/* Left-Aligned Editorial Text Overlay */
+.muhar-hero-overlay {
+  position: relative;
+  z-index: 3;
+  width: 100%;
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 56px 64px 44px 56px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  box-sizing: border-box;
+}
+
+/* Central Content Block */
+.muhar-hero-overlay__body {
+  max-width: 480px;
+  margin-top: auto;
+  margin-bottom: auto;
+  padding-top: 10px;
+}
+
+/* Small Eyebrow */
+.muhar-hero-overlay__eyebrow {
+  font-family: var(--muhar-hero-font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muhar-hero-text-eyebrow);
+  margin-bottom: 24px;
+  line-height: 1.2;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  animation: muharHeroFadeUp 0.9s var(--muhar-hero-ease) 0.15s forwards;
+}
+
+/* Main Heading in Refined Light-Regular Serif */
+.muhar-hero-overlay__title {
+  font-family: var(--muhar-hero-font-serif);
+  font-size: clamp(42px, 4.4vw, 62px);
+  font-weight: 350;
+  line-height: 1.14;
+  letter-spacing: -0.01em;
+  color: var(--muhar-hero-text-white);
+  margin-bottom: 24px;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.35);
+  opacity: 0;
+  animation: muharHeroFadeUp 1.0s var(--muhar-hero-ease) 0.25s forwards;
+}
+
+/* Description */
+.muhar-hero-overlay__description {
+  font-family: var(--muhar-hero-font-sans);
+  font-size: 13.5px;
+  font-weight: 400;
+  line-height: 1.68;
+  color: var(--muhar-hero-text-soft);
+  max-width: 380px;
+  margin-bottom: 34px;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  animation: muharHeroFadeUp 1.0s var(--muhar-hero-ease) 0.35s forwards;
+}
+
+/* Minimal Underlined Action Links */
+.muhar-hero-overlay__actions {
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: muharHeroFadeUp 1.0s var(--muhar-hero-ease) 0.45s forwards;
+}
+
+.muhar-hero-overlay__link {
+  font-family: var(--muhar-hero-font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muhar-hero-text-white);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  position: relative;
+  padding-bottom: 4px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.65);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.35);
+  transition: border-bottom-color 280ms cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 280ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.muhar-hero-overlay__link:hover {
+  border-bottom-color: #FFFFFF;
+  opacity: 1;
+  transform: translateY(-1.5px);
+}
+
+.muhar-hero-overlay__link-arrow {
+  display: inline-block;
+  font-size: 12px;
+  line-height: 1;
+  transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.muhar-hero-overlay__link:hover .muhar-hero-overlay__link-arrow,
+.muhar-hero-overlay__link:focus-visible .muhar-hero-overlay__link-arrow {
+  transform: translateX(4px);
+}
+
+.muhar-hero-overlay__link:focus-visible {
+  outline: 1px dashed var(--muhar-hero-text-white);
+  outline-offset: 4px;
+}
+
+/* Bottom-Left Project Information with Thin Divider Line */
+.muhar-hero-overlay__meta-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  opacity: 0;
+  animation: muharHeroFadeUp 1.0s var(--muhar-hero-ease) 0.55s forwards;
+}
+
+.muhar-hero-overlay__meta-line {
+  width: 140px;
+  height: 1px;
+  background-color: rgba(255, 255, 255, 0.4);
+}
+
+.muhar-hero-overlay__meta {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.muhar-hero-overlay__meta-item {
+  font-family: var(--muhar-hero-font-sans);
+  font-size: 10px;
+  font-weight: 450;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--muhar-hero-text-meta);
+  position: relative;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.35);
+}
+
+.muhar-hero-overlay__meta-item:not(:last-child)::after {
+  content: '·';
+  position: absolute;
+  right: -11px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+/* ==========================================================================
+   Animations
+   ========================================================================== */
+
+@keyframes muharHeroFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes muharHeroImgFade {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+@media (max-width: 1024px) {
+  .muhar-hero-overlay {
+    padding: 44px 40px 36px;
+  }
+  .muhar-hero-overlay__title {
+    font-size: clamp(36px, 4.0vw, 48px);
+  }
+  .muhar-hero-overlay__actions {
+    gap: 28px;
+  }
+}
+
+@media (max-width: 768px) {
+  .muhar-hero-stage {
+    height: calc(100vh - var(--muhar-height-mobile, 60px));
+    height: calc(100dvh - var(--muhar-height-mobile, 60px));
+    min-height: 500px;
+    max-height: 720px;
+  }
+
+  .muhar-hero-stage__image {
+    object-position: 62% center;
+  }
+
+  .muhar-hero-overlay {
+    padding: 28px 20px 24px;
+  }
+
+  .muhar-hero-overlay__body {
+    max-width: 100%;
+  }
+
+  .muhar-hero-overlay__eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    margin-bottom: 14px;
+  }
+
+  .muhar-hero-overlay__title {
+    font-size: clamp(28px, 7.8vw, 36px);
+    line-height: 1.16;
+    margin-bottom: 16px;
+  }
+
+  .muhar-hero-overlay__description {
+    font-size: 13px;
+    line-height: 1.6;
+    margin-bottom: 24px;
+    max-width: 340px;
+  }
+
+  .muhar-hero-overlay__actions {
+    gap: 20px;
+  }
+
+  .muhar-hero-overlay__link {
+    padding: 6px 0;
+    min-height: 36px;
+  }
+
+  .muhar-hero-overlay__meta {
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+
+  .muhar-hero-overlay__meta-item {
+    font-size: 9px;
+    letter-spacing: 0.16em;
+  }
+
+  .muhar-hero-overlay__meta-item:not(:last-child)::after {
+    right: -9px;
+  }
+
+  .muhar-hero-stage__scrim {
+    background: linear-gradient(
+      180deg,
+      rgba(14, 12, 10, 0.35) 0%,
+      rgba(14, 12, 10, 0.58) 42%,
+      rgba(14, 12, 10, 0.82) 100%
+    );
+  }
+}
+
+@media (max-width: 380px) {
+  .muhar-hero-overlay {
+    padding: 20px 16px 20px;
+  }
+
+  .muhar-hero-overlay__title {
+    font-size: 27px;
+    line-height: 1.18;
+  }
+
+  .muhar-hero-overlay__actions {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .muhar-hero-overlay__meta-wrap {
+    gap: 8px;
+  }
+
+  .muhar-hero-overlay__meta-line {
+    width: 100px;
+  }
+
+  .muhar-hero-overlay__meta {
+    gap: 10px;
+  }
+
+  .muhar-hero-overlay__meta-item {
+    font-size: 8.5px;
+    letter-spacing: 0.12em;
+  }
+
+  .muhar-hero-overlay__meta-item:not(:last-child)::after {
+    right: -7px;
+  }
+}
+

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal — MUHAR STUDIO</title>
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,500;6..96,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="/admin/admin.css">
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg">
+  <meta name="robots" content="noindex, nofollow">
+</head>
+<body>
+
+  <div class="admin-login-wrapper">
+    <div class="admin-login-card">
+      
+      <div class="admin-login-brand">
+        <span class="admin-login-brand__eyebrow">ADMINISTRATIVE PORTAL</span>
+        <h1 class="admin-login-brand__title">MUHAR STUDIO</h1>
+        <p class="admin-login-brand__sub">Sign in to manage inquiries &amp; consultations</p>
+      </div>
+
+      <div class="admin-error-banner" id="login-error-banner" role="alert">
+        Invalid username or password. Please try again.
+      </div>
+
+      <form id="admin-login-form" novalidate autocomplete="off">
+        
+        <div class="admin-form-group">
+          <label for="admin-username" class="admin-form-label">Username</label>
+          <input 
+            type="text" 
+            id="admin-username" 
+            name="username" 
+            class="admin-form-input" 
+            placeholder="Enter admin username" 
+            required 
+            autofocus
+            autocomplete="username"
+          />
+        </div>
+
+        <div class="admin-form-group">
+          <label for="admin-password" class="admin-form-label">Password</label>
+          <input 
+            type="password" 
+            id="admin-password" 
+            name="password" 
+            class="admin-form-input" 
+            placeholder="Enter admin password" 
+            required 
+            autocomplete="current-password"
+          />
+        </div>
+
+        <button type="submit" class="admin-form-btn" id="login-submit-btn">
+          <span>SIGN IN</span>
+          <span aria-hidden="true">&rarr;</span>
+        </button>
+
+      </form>
+
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.getElementById('admin-login-form');
+      const errorBanner = document.getElementById('login-error-banner');
+      const submitBtn = document.getElementById('login-submit-btn');
+
+      // Check if already authenticated
+      fetch('/api/admin/me')
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.success && data.user) {
+            window.location.href = '/admin';
+          }
+        })
+        .catch(() => {});
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        errorBanner.classList.remove('is-visible');
+
+        const username = document.getElementById('admin-username').value.trim();
+        const password = document.getElementById('admin-password').value;
+
+        if (!username || !password) {
+          errorBanner.textContent = 'Please provide both username and password.';
+          errorBanner.classList.add('is-visible');
+          return;
+        }
+
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<span>AUTHENTICATING...</span>';
+
+        try {
+          const res = await fetch('/api/admin/login', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json'
+            },
+            body: JSON.stringify({ username, password })
+          });
+
+          const data = await res.json();
+
+          if (!res.ok || !data.success) {
+            throw new Error(data.message || 'Invalid administrative credentials.');
+          }
+
+          // Successful login -> Redirect to admin dashboard
+          window.location.href = '/admin';
+
+        } catch (err) {
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = '<span>SIGN IN</span><span aria-hidden="true">&rarr;</span>';
+          errorBanner.textContent = err.message || 'Login failed. Please check credentials.';
+          errorBanner.classList.add('is-visible');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,238 @@
+/**
+ * MUHAR STUDIO — SQLite Database Manager
+ * Embedded persistence for studio inquiries with automatic schema initialization
+ * and full administrative query capabilities.
+ */
+
+const fs = require('fs');
+const path = require('path');
+const Database = require('better-sqlite3');
+const config = require('./config');
+
+// Ensure data directory exists
+const dbDir = path.dirname(config.databasePath);
+if (!fs.existsSync(dbDir)) {
+  fs.mkdirSync(dbDir, { recursive: true });
+}
+
+// Connect to SQLite
+const db = new Database(config.databasePath);
+
+// Enable Write-Ahead Logging (WAL) for high performance & concurrency
+db.pragma('journal_mode = WAL');
+db.pragma('synchronous = NORMAL');
+
+// Initialize schema
+db.exec(`
+  CREATE TABLE IF NOT EXISTS inquiries (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    type TEXT NOT NULL,                -- 'consultation' or 'contact'
+    name TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT,
+    project_type TEXT,
+    budget TEXT,
+    message TEXT NOT NULL,
+    ip_address TEXT,
+    user_agent TEXT,
+    status TEXT DEFAULT 'new',         -- 'new', 'contacted', 'archived'
+    email_sent INTEGER DEFAULT 0,      -- 1 if notification sent, 0 otherwise
+    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_inquiries_created_at ON inquiries(created_at);
+  CREATE INDEX IF NOT EXISTS idx_inquiries_type ON inquiries(type);
+  CREATE INDEX IF NOT EXISTS idx_inquiries_status ON inquiries(status);
+`);
+
+/**
+ * Save a new inquiry to the database
+ * @param {Object} data
+ * @returns {Object} Inserted record info
+ */
+function saveInquiry(data) {
+  const stmt = db.prepare(`
+    INSERT INTO inquiries (
+      type, name, email, phone, project_type, budget, message, ip_address, user_agent, email_sent
+    ) VALUES (
+      @type, @name, @email, @phone, @project_type, @budget, @message, @ip_address, @user_agent, @email_sent
+    )
+  `);
+
+  const info = stmt.run({
+    type: data.type || 'consultation',
+    name: data.name,
+    email: data.email,
+    phone: data.phone || null,
+    project_type: data.projectType || null,
+    budget: data.budget || null,
+    message: data.message,
+    ip_address: data.ipAddress || null,
+    user_agent: data.userAgent || null,
+    email_sent: data.emailSent ? 1 : 0
+  });
+
+  return { id: info.lastInsertRowid, ...data };
+}
+
+/**
+ * Update email notification status
+ * @param {number} id 
+ * @param {boolean} sent 
+ */
+function updateEmailStatus(id, sent) {
+  const stmt = db.prepare(`UPDATE inquiries SET email_sent = ? WHERE id = ?`);
+  stmt.run(sent ? 1 : 0, id);
+}
+
+/**
+ * Update inquiry status ('new', 'contacted', 'archived')
+ * @param {number} id
+ * @param {string} status
+ * @returns {Object|null} Updated inquiry record
+ */
+function updateInquiryStatus(id, status) {
+  const validStatuses = ['new', 'contacted', 'archived'];
+  if (!validStatuses.includes(status)) {
+    throw new Error(`Invalid status '${status}'. Must be one of: ${validStatuses.join(', ')}`);
+  }
+
+  const stmt = db.prepare(`UPDATE inquiries SET status = ? WHERE id = ?`);
+  const info = stmt.run(status, id);
+
+  if (info.changes === 0) return null;
+  return getInquiryById(id);
+}
+
+/**
+ * Delete an inquiry by ID
+ * @param {number} id
+ * @returns {boolean}
+ */
+function deleteInquiry(id) {
+  const stmt = db.prepare(`DELETE FROM inquiries WHERE id = ?`);
+  const info = stmt.run(id);
+  return info.changes > 0;
+}
+
+/**
+ * Retrieve recent inquiries with optional limit
+ * @param {Object} [options]
+ * @returns {Array}
+ */
+function getInquiries(options = {}) {
+  const limit = options.limit || 50;
+  const offset = options.offset || 0;
+  const stmt = db.prepare(`
+    SELECT * FROM inquiries 
+    ORDER BY created_at DESC 
+    LIMIT ? OFFSET ?
+  `);
+  return stmt.all(limit, offset);
+}
+
+/**
+ * Get inquiry by ID
+ * @param {number} id
+ * @returns {Object|null}
+ */
+function getInquiryById(id) {
+  const stmt = db.prepare(`SELECT * FROM inquiries WHERE id = ?`);
+  return stmt.get(id) || null;
+}
+
+/**
+ * Filter and search inquiries for Admin Dashboard
+ * @param {Object} params { type, status, sort, search, limit, offset }
+ * @returns {{ inquiries: Array, total: number }}
+ */
+function getFilteredInquiries(params = {}) {
+  const {
+    type,
+    status,
+    sort = 'newest',
+    search,
+    limit = 50,
+    offset = 0
+  } = params;
+
+  let query = `SELECT * FROM inquiries WHERE 1=1`;
+  let countQuery = `SELECT COUNT(*) AS count FROM inquiries WHERE 1=1`;
+  const bindings = {};
+
+  if (type && type !== 'all') {
+    query += ` AND type = @type`;
+    countQuery += ` AND type = @type`;
+    bindings.type = type;
+  }
+
+  if (status && status !== 'all') {
+    query += ` AND status = @status`;
+    countQuery += ` AND status = @status`;
+    bindings.status = status;
+  }
+
+  if (search && typeof search === 'string' && search.trim() !== '') {
+    query += ` AND (name LIKE @search OR email LIKE @search OR message LIKE @search OR phone LIKE @search)`;
+    countQuery += ` AND (name LIKE @search OR email LIKE @search OR message LIKE @search OR phone LIKE @search)`;
+    bindings.search = `%${search.trim()}%`;
+  }
+
+  // Sorting
+  if (sort === 'oldest') {
+    query += ` ORDER BY created_at ASC`;
+  } else {
+    query += ` ORDER BY created_at DESC`;
+  }
+
+  query += ` LIMIT @limit OFFSET @offset`;
+  bindings.limit = Math.min(Math.max(parseInt(limit, 10) || 50, 1), 200);
+  bindings.offset = Math.max(parseInt(offset, 10) || 0, 0);
+
+  const inquiries = db.prepare(query).all(bindings);
+  
+  // Clean bindings for count query
+  const countBindings = { ...bindings };
+  delete countBindings.limit;
+  delete countBindings.offset;
+  const countRow = db.prepare(countQuery).get(countBindings);
+
+  return {
+    inquiries,
+    total: countRow ? countRow.count : 0
+  };
+}
+
+/**
+ * Calculate statistical overview for Admin Dashboard KPI cards
+ * @returns {Object}
+ */
+function getInquiryStats() {
+  const totalRow = db.prepare(`SELECT COUNT(*) AS total FROM inquiries`).get();
+  const newRow = db.prepare(`SELECT COUNT(*) AS count FROM inquiries WHERE status = 'new'`).get();
+  const contactedRow = db.prepare(`SELECT COUNT(*) AS count FROM inquiries WHERE status = 'contacted'`).get();
+  const archivedRow = db.prepare(`SELECT COUNT(*) AS count FROM inquiries WHERE status = 'archived'`).get();
+  const consultationRow = db.prepare(`SELECT COUNT(*) AS count FROM inquiries WHERE type = 'consultation'`).get();
+  const contactRow = db.prepare(`SELECT COUNT(*) AS count FROM inquiries WHERE type = 'contact'`).get();
+
+  return {
+    total: totalRow ? totalRow.total : 0,
+    new: newRow ? newRow.count : 0,
+    contacted: contactedRow ? contactedRow.count : 0,
+    archived: archivedRow ? archivedRow.count : 0,
+    consultations: consultationRow ? consultationRow.count : 0,
+    contacts: contactRow ? contactRow.count : 0
+  };
+}
+
+module.exports = {
+  db,
+  saveInquiry,
+  updateEmailStatus,
+  updateInquiryStatus,
+  deleteInquiry,
+  getInquiries,
+  getInquiryById,
+  getFilteredInquiries,
+  getInquiryStats
+};

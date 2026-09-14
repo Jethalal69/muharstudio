@@ -1,0 +1,377 @@
+/* ==========================================================================
+   MUHAR STUDIO — Luxury Editorial Navbar
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600;6..96,700&family=Playfair+Display:wght@500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --muhar-bg: #FAF7F2;
+  --muhar-text: #24211E;
+  --muhar-text-muted: #6B6560;
+  --muhar-line: #24211E;
+  --muhar-height-desktop: 68px;
+  --muhar-height-mobile: 60px;
+  --muhar-font-brand: 'Bodoni Moda', 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --muhar-font-nav: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --muhar-ease: cubic-bezier(0.25, 1, 0.5, 1);
+  --muhar-transition-duration: 260ms;
+}
+
+/* Base Reset for component compatibility */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Accessible Skip to Content Link */
+.muhar-skip-link {
+  position: absolute;
+  top: -60px;
+  left: 20px;
+  background: var(--muhar-text, #24211E);
+  color: var(--muhar-bg, #FAF7F2);
+  padding: 10px 18px;
+  font-family: var(--muhar-font-nav, 'Plus Jakarta Sans', sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: none;
+  z-index: 10000;
+  border-radius: 0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  transition: top 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.muhar-skip-link:focus {
+  top: 16px;
+  outline: 2px solid var(--muhar-text, #24211E);
+  outline-offset: 2px;
+}
+
+/* Header Container */
+.muhar-header {
+  position: sticky;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: var(--muhar-bg);
+  z-index: 1000;
+  transition: background-color var(--muhar-transition-duration) var(--muhar-ease);
+}
+
+/* Main Navigation Bar — Exact Viewport Centering using 3-Column Equal Grid */
+.muhar-navbar {
+  width: 100%;
+  height: var(--muhar-height-desktop);
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  padding: 0 48px;
+  background-color: transparent;
+  position: relative;
+}
+
+/* Left Navigation Group */
+.muhar-nav-group--left {
+  justify-self: start;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+}
+
+/* Center Brand Identity (Refined Serif Masthead matching reference) */
+.muhar-brand-container {
+  justify-self: center;
+  text-align: center;
+}
+
+.muhar-brand-link {
+  display: inline-block;
+  font-family: var(--muhar-font-brand);
+  font-size: 20px;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muhar-text);
+  text-decoration: none;
+  line-height: 1;
+  padding: 4px 0;
+  transition: opacity var(--muhar-transition-duration) var(--muhar-ease);
+}
+
+.muhar-brand-link:hover {
+  opacity: 0.8;
+}
+
+/* Right Navigation Group */
+.muhar-nav-group--right {
+  justify-self: end;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  list-style: none;
+}
+
+/* Individual Navigation Item & Links */
+.muhar-nav-item {
+  display: inline-flex;
+  align-items: center;
+}
+
+.muhar-nav-link {
+  font-family: var(--muhar-font-nav);
+  font-size: 11.5px;
+  font-weight: 450;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muhar-text);
+  text-decoration: none;
+  position: relative;
+  padding: 4px 0;
+  line-height: 1.2;
+  transition: color var(--muhar-transition-duration) var(--muhar-ease);
+}
+
+/* Subtle Underline Reveal Micro-Interaction (200-300ms) */
+.muhar-nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--muhar-line);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform var(--muhar-transition-duration) var(--muhar-ease);
+}
+
+.muhar-nav-link:hover::after,
+.muhar-nav-link:focus-visible::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.muhar-nav-link:hover {
+  color: #12100E;
+}
+
+.muhar-nav-link:focus-visible {
+  outline: 1px dashed var(--muhar-text-muted);
+  outline-offset: 4px;
+}
+
+/* Hamburger Toggle Button (Hidden on Desktop) */
+.muhar-menu-toggle {
+  display: none;
+  justify-self: end;
+  background: none;
+  border: none;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--muhar-text);
+  width: 40px;
+  height: 40px;
+  position: relative;
+  z-index: 1100;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+.muhar-menu-toggle:focus-visible {
+  outline: 1px dashed var(--muhar-text-muted);
+  outline-offset: 2px;
+}
+
+.muhar-menu-toggle__line {
+  display: block;
+  width: 20px;
+  height: 1px;
+  background-color: var(--muhar-text);
+  transition: transform 280ms var(--muhar-ease),
+              opacity 200ms ease;
+  transform-origin: center;
+}
+
+/* Active Hamburger State (Transform to minimal X) */
+.muhar-header.is-open .muhar-menu-toggle__line:first-child {
+  transform: translateY(3px) rotate(45deg);
+}
+
+.muhar-header.is-open .muhar-menu-toggle__line:last-child {
+  transform: translateY(-3px) rotate(-45deg);
+}
+
+/* Mobile Navigation Drawer */
+.muhar-mobile-drawer {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  background-color: var(--muhar-bg);
+  z-index: 1050;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 320ms var(--muhar-ease),
+              visibility 320ms var(--muhar-ease);
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 80px 32px 48px;
+}
+
+.muhar-header.is-open .muhar-mobile-drawer {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+.muhar-mobile-nav-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  text-align: center;
+}
+
+.muhar-mobile-nav-link {
+  font-family: var(--muhar-font-nav);
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muhar-text);
+  text-decoration: none;
+  position: relative;
+  display: inline-block;
+  padding: 4px 0;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 300ms var(--muhar-ease),
+              transform 300ms var(--muhar-ease),
+              color var(--muhar-transition-duration) ease;
+}
+
+.muhar-header.is-open .muhar-mobile-nav-link {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Staggered link reveal in mobile drawer */
+.muhar-header.is-open .muhar-mobile-nav-item:nth-child(1) .muhar-mobile-nav-link { transition-delay: 80ms; }
+.muhar-header.is-open .muhar-mobile-nav-item:nth-child(2) .muhar-mobile-nav-link { transition-delay: 130ms; }
+.muhar-header.is-open .muhar-mobile-nav-item:nth-child(3) .muhar-mobile-nav-link { transition-delay: 180ms; }
+.muhar-header.is-open .muhar-mobile-nav-item:nth-child(4) .muhar-mobile-nav-link { transition-delay: 230ms; }
+.muhar-header.is-open .muhar-mobile-nav-item:nth-child(5) .muhar-mobile-nav-link { transition-delay: 280ms; }
+.muhar-header.is-open .muhar-mobile-nav-item:nth-child(6) .muhar-mobile-nav-link { transition-delay: 330ms; }
+
+.muhar-mobile-nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--muhar-line);
+  transform: scaleX(0);
+  transform-origin: center;
+  transition: transform var(--muhar-transition-duration) var(--muhar-ease);
+}
+
+.muhar-mobile-nav-link:hover::after {
+  transform: scaleX(1);
+}
+
+/* Spacer for mobile grid symmetry */
+.muhar-spacer-left {
+  display: none;
+  justify-self: start;
+  width: 40px;
+  height: 40px;
+}
+
+/* ==========================================================================
+   Responsive Breakpoints
+   ========================================================================== */
+
+@media (max-width: 960px) {
+  .muhar-navbar {
+    padding: 0 28px;
+  }
+  .muhar-nav-group--left,
+  .muhar-nav-group--right {
+    gap: 22px;
+  }
+}
+
+@media (max-width: 768px) {
+  .muhar-navbar {
+    height: var(--muhar-height-mobile);
+    padding: 0 20px;
+  }
+
+  .muhar-nav-group--left,
+  .muhar-nav-group--right {
+    display: none;
+  }
+
+  .muhar-spacer-left {
+    display: block;
+  }
+
+  .muhar-menu-toggle {
+    display: flex;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .muhar-mobile-drawer {
+    display: flex;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  .muhar-brand-link {
+    font-size: 13.5px;
+    letter-spacing: 0.18em;
+  }
+}
+
+@media (max-width: 360px) {
+  .muhar-navbar {
+    padding: 0 14px;
+  }
+
+  .muhar-spacer-left,
+  .muhar-menu-toggle {
+    width: 36px;
+    height: 36px;
+  }
+
+  .muhar-brand-link {
+    font-size: 12px;
+    letter-spacing: 0.14em;
+  }
+
+  .muhar-mobile-nav-link {
+    font-size: 14px;
+    letter-spacing: 0.14em;
+  }
+
+  .muhar-mobile-nav-list {
+    gap: 22px;
+  }
+}
+
+
+

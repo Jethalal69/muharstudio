@@ -1,0 +1,823 @@
+/* ==========================================================================
+   MUHAR STUDIO — "Our Approach" Dedicated Editorial Page Stylesheet
+   Matches exact brand typography, warm ivory palette, lines & animations.
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Bodoni+Moda:opsz,wght@6..96,600;6..96,700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --muhar-bg: #FAF7F2;
+  --muhar-text: #24211E;
+  --muhar-text-muted: #6B6560;
+  --muhar-text-subtle: #8A847E;
+  --muhar-line: rgba(36, 33, 30, 0.14);
+  --muhar-line-strong: #24211E;
+  --muhar-font-serif: 'Cormorant Garamond', 'Playfair Display', Georgia, serif;
+  --muhar-font-brand: 'Bodoni Moda', 'Playfair Display', 'Cormorant Garamond', Georgia, serif;
+  --muhar-font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --muhar-ease: cubic-bezier(0.25, 1, 0.5, 1);
+  --muhar-container-max: 1360px;
+}
+
+/* Base Body Presentation */
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: var(--muhar-bg);
+  color: var(--muhar-text);
+  font-family: var(--muhar-font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+}
+
+/* Main Container Wrapper */
+.muhar-approach-container {
+  max-width: var(--muhar-container-max);
+  margin: 0 auto;
+  padding: 0 48px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 2;
+}
+
+/* ==========================================================================
+   Architectural Monogram Emblem Background Layer
+   ========================================================================== */
+.muhar-approach-bg-watermark {
+  position: fixed;
+  top: 50%;
+  right: -2%;
+  transform: translateY(-50%);
+  width: min(680px, 48vw);
+  height: min(680px, 48vw);
+  background-image: url('/assets/approach-bg.jpg');
+  background-size: contain;
+  background-position: center center;
+  background-repeat: no-repeat;
+  opacity: 0.16;
+  mix-blend-mode: multiply;
+  pointer-events: none;
+  z-index: 0;
+  transition: opacity 0.6s var(--muhar-ease);
+}
+
+/* ==========================================================================
+   1. Breadcrumb & Meta Bar
+   ========================================================================== */
+.muhar-approach-breadcrumb {
+  padding: 40px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.muhar-approach-back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--muhar-font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted);
+  text-decoration: none;
+  transition: color 250ms var(--muhar-ease), transform 250ms var(--muhar-ease);
+}
+
+.muhar-approach-back-link:hover {
+  color: var(--muhar-text);
+  transform: translateX(-4px);
+}
+
+.muhar-approach-badge {
+  font-family: var(--muhar-font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted);
+}
+
+/* ==========================================================================
+   2. HERO SECTION
+   ========================================================================== */
+.muhar-approach-hero {
+  padding: 56px 0 80px;
+  max-width: 980px;
+}
+
+.muhar-approach-eyebrow {
+  display: block;
+  font-family: var(--muhar-font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted);
+  margin-bottom: 20px;
+  line-height: 1.2;
+}
+
+.muhar-approach-hero__title {
+  font-family: var(--muhar-font-serif);
+  font-size: clamp(38px, 5.0vw, 68px);
+  font-weight: 400;
+  line-height: 1.10;
+  letter-spacing: -0.01em;
+  color: var(--muhar-text);
+  margin: 0 0 28px 0;
+}
+
+.muhar-approach-hero__lead {
+  font-family: var(--muhar-font-sans);
+  font-size: clamp(15px, 1.15vw, 17.5px);
+  font-weight: 350;
+  line-height: 1.76;
+  color: #4A443E;
+  letter-spacing: 0.01em;
+  max-width: 720px;
+  margin: 0;
+}
+
+/* Editorial Featured Architectural Visual */
+.muhar-approach-hero-visual {
+  width: 100%;
+  margin-bottom: 120px;
+}
+
+.muhar-approach-hero-visual__frame {
+  position: relative;
+  width: 100%;
+  height: 520px;
+  overflow: hidden;
+  background-color: #EAE5DE;
+  border-radius: 0;
+}
+
+.muhar-approach-hero-visual__img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 50%;
+  display: block;
+}
+
+.muhar-approach-hero-visual__caption {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.muhar-approach-hero-visual__caption-line {
+  width: 28px;
+  height: 1px;
+  background-color: rgba(36, 33, 30, 0.25);
+  flex-shrink: 0;
+}
+
+.muhar-approach-hero-visual__caption-text {
+  font-family: var(--muhar-font-sans);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.20em;
+  text-transform: uppercase;
+  color: var(--muhar-text-muted);
+  margin: 0;
+}
+
+/* ==========================================================================
+   3. DESIGN PHILOSOPHY SECTION (Material. Light. Form.)
+   ========================================================================== */
+.muhar-philosophy {
+  padding: 0 0 140px;
+  position: relative;
+}
+
+.muhar-philosophy__header {
+  margin-bottom: 72px;
+  max-width: 720px;
+}
+
+.muhar-philosophy__title {
+  font-family: var(--muhar-font-serif);
+  font-size: clamp(34px, 3.8vw, 54px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.02em;
+  color: var(--muhar-text);
+  margin: 0 0 16px 0;
+}
+
+.muhar-philosophy__intro {
+  font-family: var(--muhar-font-sans);
+  font-size: clamp(14px, 1.05vw, 16px);
+  font-weight: 350;
+  line-height: 1.72;
+  color: var(--muhar-text-muted);
+  margin: 0;
+}
+
+.muhar-philosophy__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 56px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.muhar-philosophy-pillar {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.muhar-philosophy-pillar__divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--muhar-line);
+  margin-bottom: 28px;
+}
+
+.muhar-philosophy-pillar__num {
+  font-family: var(--muhar-font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.20em;
+  color: var(--muhar-text-muted);
+  margin-bottom: 14px;
+}
+
+.muhar-philosophy-pillar__name {
+  font-family: var(--muhar-font-serif);
+  font-size: clamp(26px, 2.4vw, 36px);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muhar-text);
+  margin: 0 0 10px 0;
+  line-height: 1.2;
+}
+
+.muhar-philosophy-pillar__quote {
+  font-family: var(--muhar-font-serif);
+  font-size: 16.5px;
+  font-style: italic;
+  font-weight: 400;
+  color: #4A443E;
+  margin: 0 0 16px 0;
+  line-height: 1.45;
+}
+
+.muhar-philosophy-pillar__body {
+  font-family: var(--muhar-font-sans);
+  font-size: 13.5px;
+  font-weight: 350;
+  line-height: 1.72;
+  color: var(--muhar-text-muted);
+  margin: 0;
+}
+
+/* ==========================================================================
+   4. OUR PROCESS SECTION (Numbered 4 Stages with Horizontal Dividers)
+   ========================================================================== */
+.muhar-process {
+  padding: 0 0 150px;
+  position: relative;
+}
+
+.muhar-process__header {
+  margin-bottom: 64px;
+  max-width: 640px;
+}
+
+.muhar-process__title {
+  font-family: var(--muhar-font-serif);
+  font-size: clamp(34px, 3.4vw, 48px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muhar-text);
+  margin: 0 0 14px 0;
+}
+
+.muhar-process__subtitle {
+  font-family: var(--muhar-font-sans);
+  font-size: clamp(13.5px, 1.05vw, 15.5px);
+  font-weight: 350;
+  line-height: 1.6;
+  color: var(--muhar-text-muted);
+  margin: 0;
+}
+
+.muhar-process__list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.muhar-process-row {
+  position: relative;
+  width: 100%;
+  margin-top: -1px;
+}
+
+.muhar-process-row:first-child {
+  margin-top: 0;
+}
+
+.muhar-process-row__divider {
+  width: 100%;
+  height: 1px;
+  background-color: var(--muhar-line);
+  transition: background-color 400ms var(--muhar-ease);
+  position: relative;
+  z-index: 1;
+}
+
+.muhar-process-row__content {
+  display: grid;
+  grid-template-columns: 80px 240px 1fr 220px;
+  align-items: baseline;
+  padding: 44px 12px;
+  box-sizing: border-box;
+  transition: padding-left 400ms var(--muhar-ease);
+  gap: 24px;
+}
+
+.muhar-process-row__number {
+  font-family: var(--muhar-font-sans);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.20em;
+  color: var(--muhar-text-muted);
+  transition: color 350ms ease;
+  line-height: 1;
+}
+
+.muhar-process-row__title {
+  font-family: var(--muhar-font-serif);
+  font-size: clamp(26px, 2.8vw, 38px);
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--muhar-text);
+  margin: 0;
+  line-height: 1.15;
+  transition: transform 400ms var(--muhar-ease), color 350ms ease;
+  will-change: transform;
+}
+
+.muhar-process-row__desc {
+  font-family: var(--muhar-font-sans);
+  font-size: 14px;
+  font-weight: 350;
+  line-height: 1.68;
+  color: #524C46;
+  margin: 0;
+}
+
+.muhar-process-row__meta {
+  font-family: var(--muhar-font-sans);
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--muhar-text-subtle);
+  text-align: right;
+  line-height: 1.5;
+}
+
+/* Process Row Subtle Hover Interaction */
+.muhar-process-row:hover .muhar-process-row__divider {
+  background-color: var(--muhar-text);
+  z-index: 2;
+}
+
+.muhar-process-row:hover .muhar-process-row__number {
+  color: var(--muhar-text);
+}
+
+.muhar-process-row:hover .muhar-process-row__title {
+  transform: translateX(8px);
+  color: #12100E;
+}
+
+/* ==========================================================================
+   5. WHAT WE VALUE SECTION
+   ========================================================================== */
+.muhar-values {
+  padding: 0 0 150px;
+  position: relative;
+}
+
+.muhar-values__header {
+  margin-bottom: 64px;
+  max-width: 600px;
+}
+
+.muhar-values__title {
+  font-family: var(--muhar-font-serif);
+  font-size: clamp(34px, 3.4vw, 48px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muhar-text);
+  margin: 0 0 14px 0;
+}
+
+.muhar-values__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 56px 72px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.muhar-value-card {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.muhar-value-card__line {
+  width: 100%;
+  height: 1px;
+  background-color: var(--muhar-line);
+  margin-bottom: 24px;
+}
+
+.muhar-value-card__header {
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 12px;
+}
+
+.muhar-value-card__index {
+  font-family: var(--muhar-font-sans);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  color: var(--muhar-text-muted);
+}
+
+.muhar-value-card__title {
+  font-family: var(--muhar-font-serif);
+  font-size: clamp(22px, 2.2vw, 30px);
+  font-weight: 400;
+  letter-spacing: 0.02em;
+  color: var(--muhar-text);
+  margin: 0;
+  line-height: 1.25;
+}
+
+.muhar-value-card__text {
+  font-family: var(--muhar-font-sans);
+  font-size: 13.5px;
+  font-weight: 350;
+  line-height: 1.72;
+  color: var(--muhar-text-muted);
+  margin: 0;
+}
+
+/* ==========================================================================
+   6. FINAL CTA SECTION (Spacious, Minimal)
+   ========================================================================== */
+.muhar-approach-cta {
+  padding: 110px 0 140px;
+  border-top: 1px solid var(--muhar-line);
+  text-align: center;
+  position: relative;
+  background-color: var(--muhar-bg);
+}
+
+.muhar-approach-cta__container {
+  max-width: 720px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.muhar-approach-cta__title {
+  font-family: var(--muhar-font-serif);
+  font-size: clamp(34px, 4.2vw, 56px);
+  font-weight: 400;
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+  color: var(--muhar-text);
+  margin: 0 0 18px 0;
+}
+
+.muhar-approach-cta__text {
+  font-family: var(--muhar-font-sans);
+  font-size: clamp(14px, 1.1vw, 16px);
+  font-weight: 350;
+  line-height: 1.6;
+  color: var(--muhar-text-muted);
+  margin: 0 0 38px 0;
+}
+
+.muhar-approach-cta__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 36px;
+  border: 1px solid var(--muhar-text);
+  background-color: transparent;
+  color: var(--muhar-text);
+  font-family: var(--muhar-font-sans);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  text-decoration: none;
+  border-radius: 0;
+  cursor: pointer;
+  transition: background-color 350ms var(--muhar-ease),
+              color 350ms var(--muhar-ease),
+              transform 350ms var(--muhar-ease);
+}
+
+.muhar-approach-cta__btn:hover {
+  background-color: var(--muhar-text);
+  color: var(--muhar-bg);
+  transform: translateY(-2px);
+}
+
+.muhar-approach-cta__arrow {
+  display: inline-block;
+  font-size: 13px;
+  transition: transform 350ms var(--muhar-ease);
+}
+
+.muhar-approach-cta__btn:hover .muhar-approach-cta__arrow {
+  transform: translateX(4px);
+}
+
+/* ==========================================================================
+   7. Footer Styles provided globally by footer.css
+   ========================================================================== */
+
+/* ==========================================================================
+   8. Responsive Breakpoints
+   ========================================================================== */
+
+/* Tablet (max-width: 1024px) */
+@media (max-width: 1024px) {
+  .muhar-approach-bg-watermark {
+    width: min(520px, 55vw);
+    height: min(520px, 55vw);
+    right: -3%;
+    opacity: 0.12;
+  }
+
+  .muhar-approach-container {
+    padding: 0 36px;
+  }
+
+  .muhar-approach-hero {
+    padding: 44px 0 60px;
+  }
+
+  .muhar-approach-hero-visual {
+    margin-bottom: 90px;
+  }
+
+  .muhar-approach-hero-visual__frame {
+    height: 420px;
+  }
+
+  .muhar-philosophy {
+    padding-bottom: 100px;
+  }
+
+  .muhar-philosophy__grid {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .muhar-process {
+    padding-bottom: 110px;
+  }
+
+  .muhar-process-row__content {
+    grid-template-columns: 60px 180px 1fr auto;
+    padding: 36px 8px;
+    gap: 16px;
+  }
+
+  .muhar-process-row__title {
+    font-size: clamp(22px, 2.6vw, 30px);
+  }
+
+  .muhar-values {
+    padding-bottom: 110px;
+  }
+
+  .muhar-values__grid {
+    grid-template-columns: 1fr;
+    gap: 36px;
+  }
+}
+
+/* Mobile (max-width: 768px) */
+@media (max-width: 768px) {
+  .muhar-approach-bg-watermark {
+    display: block;
+    width: min(340px, 86vw);
+    height: min(340px, 86vw);
+    right: 50%;
+    transform: translate(50%, -50%);
+    top: 34%;
+    opacity: 0.12;
+    pointer-events: none;
+  }
+
+  .muhar-approach-container {
+    padding: 0 20px;
+  }
+
+
+  .muhar-approach-breadcrumb {
+    padding-top: 24px;
+  }
+
+  .muhar-approach-hero {
+    padding: 32px 0 44px;
+  }
+
+  .muhar-approach-eyebrow {
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    margin-bottom: 14px;
+  }
+
+  .muhar-approach-hero__title {
+    font-size: clamp(28px, 7.5vw, 38px);
+    line-height: 1.15;
+    margin-bottom: 18px;
+  }
+
+  .muhar-approach-hero__lead {
+    font-size: 13.5px;
+    line-height: 1.68;
+  }
+
+  .muhar-approach-hero-visual {
+    margin-bottom: 60px;
+  }
+
+  .muhar-approach-hero-visual__frame {
+    height: 280px;
+  }
+
+  .muhar-philosophy {
+    padding-bottom: 70px;
+  }
+
+  .muhar-philosophy__header {
+    margin-bottom: 36px;
+  }
+
+  .muhar-philosophy__title {
+    font-size: clamp(26px, 6.5vw, 34px);
+  }
+
+  .muhar-philosophy__grid {
+    gap: 32px;
+  }
+
+  .muhar-philosophy-pillar__name {
+    font-size: 24px;
+  }
+
+  .muhar-process {
+    padding-bottom: 70px;
+  }
+
+  .muhar-process__header {
+    margin-bottom: 36px;
+  }
+
+  .muhar-process__title {
+    font-size: clamp(26px, 6.5vw, 34px);
+    margin-bottom: 8px;
+  }
+
+  .muhar-process-row__content {
+    grid-template-columns: 36px 1fr;
+    padding: 24px 4px;
+    gap: 10px;
+  }
+
+  .muhar-process-row__title {
+    font-size: 20px;
+  }
+
+  .muhar-process-row__desc {
+    grid-column: 2 / -1;
+    font-size: 13px;
+    line-height: 1.6;
+  }
+
+  .muhar-process-row__meta {
+    grid-column: 2 / -1;
+    text-align: left;
+    font-size: 9.5px;
+    letter-spacing: 0.14em;
+    margin-top: 4px;
+  }
+
+  .muhar-values {
+    padding-bottom: 70px;
+  }
+
+  .muhar-values__header {
+    margin-bottom: 36px;
+  }
+
+  .muhar-values__title {
+    font-size: clamp(26px, 6.5vw, 34px);
+    margin-bottom: 8px;
+  }
+
+  .muhar-values__grid {
+    gap: 28px;
+  }
+
+  .muhar-value-card__title {
+    font-size: 20px;
+  }
+
+  .muhar-value-card__text {
+    font-size: 13px;
+    line-height: 1.65;
+  }
+
+  .muhar-approach-cta {
+    padding: 60px 0 80px;
+  }
+
+  .muhar-approach-cta__title {
+    font-size: clamp(28px, 7vw, 36px);
+    margin-bottom: 12px;
+  }
+
+  .muhar-approach-cta__text {
+    font-size: 13.5px;
+    margin-bottom: 26px;
+  }
+
+  .muhar-approach-cta__btn {
+    width: 100%;
+    max-width: 320px;
+    justify-content: center;
+    padding: 15px 24px;
+  }
+
+  .muhar-footer {
+    padding: 32px 20px;
+  }
+
+  .muhar-footer__container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 360px) {
+  .muhar-approach-bg-watermark {
+    width: 270px;
+    height: 270px;
+    top: 32%;
+    opacity: 0.10;
+  }
+
+  .muhar-approach-container {
+    padding: 0 16px;
+  }
+
+  .muhar-approach-hero__title {
+    font-size: 26px;
+  }
+
+  .muhar-philosophy__title,
+  .muhar-process__title,
+  .muhar-values__title,
+  .muhar-approach-cta__title {
+    font-size: 24px;
+  }
+
+  .muhar-footer {
+    padding: 28px 16px;
+  }
+}
+
+
