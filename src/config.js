@@ -26,8 +26,34 @@ const config = {
   },
 
   // Database (PostgreSQL for cloud/Vercel, SQLite for local fallback)
-  databaseUrl: (process.env.DATABASE_URL || process.env.POSTGRES_URL || '').trim(),
-  isPostgres: Boolean((process.env.DATABASE_URL || process.env.POSTGRES_URL || '').trim()),
+  databaseUrl: (
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_URL ||
+    process.env.POSTGRES_PRISMA_URL ||
+    process.env.POSTGRES_URL_NON_POOLING ||
+    process.env.NEON_DATABASE_URL ||
+    process.env.SUPABASE_DATABASE_URL ||
+    process.env.PGURI ||
+    ''
+  ).trim(),
+  isPostgres: Boolean(
+    (
+      process.env.DATABASE_URL ||
+      process.env.POSTGRES_URL ||
+      process.env.POSTGRES_PRISMA_URL ||
+      process.env.POSTGRES_URL_NON_POOLING ||
+      process.env.NEON_DATABASE_URL ||
+      process.env.SUPABASE_DATABASE_URL ||
+      process.env.PGURI ||
+      ''
+    ).trim()
+  ),
+  isVercel: Boolean(
+    process.env.VERCEL ||
+    process.env.AWS_LAMBDA_FUNCTION_NAME ||
+    process.env.NOW_REGION ||
+    process.env.LAMBDA_TASK_ROOT
+  ),
   databasePath: process.env.DATABASE_PATH
     ? path.resolve(process.env.DATABASE_PATH)
     : path.join(__dirname, '..', 'data', 'inquiries.db'),

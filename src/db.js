@@ -8,29 +8,99 @@ const fs = require('fs');
 const path = require('path');
 const config = require('./config');
 
-let isPostgres = config.isPostgres;
 let pgPool = null;
 let sqliteDb = null;
 let initPromise = null;
+let sqliteInitialized = false;
 
 // ============================================================================
-// 1. INITIALIZATION & SCHEMA DEFINITION
+// 1. DYNAMIC ENVIRONMENT & DRIVER HELPERS
 // ============================================================================
 
-if (isPostgres) {
+/**
+ * Check dynamically if PostgreSQL is configured via environment variables
+ */
+function isPostgresConfigured() {
+  const url = (
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_URL ||
+    process.env.POSTGRES_PRISMA_URL ||
+    process.env.POSTGRES_URL_NON_POOLING ||
+    process.env.NEON_DATABASE_URL ||
+    process.env.SUPABASE_DATABASE_URL ||
+    process.env.PGURI ||
+    config.databaseUrl ||
+    ''
+  ).trim();
+  return Boolean(url);
+}
+
+/**
+ * Get current PostgreSQL connection string
+ */
+function getDatabaseUrl() {
+  return (
+    process.env.DATABASE_URL ||
+    process.env.POSTGRES_URL ||
+    process.env.POSTGRES_PRISMA_URL ||
+    process.env.POSTGRES_URL_NON_POOLING ||
+    process.env.NEON_DATABASE_URL ||
+    process.env.SUPABASE_DATABASE_URL ||
+    process.env.PGURI ||
+    config.databaseUrl ||
+    ''
+  ).trim();
+}
+
+/**
+ * Check if running in a serverless / Vercel cloud environment
+ */
+function isServerlessEnvironment() {
+  return Boolean(
+    process.env.VERCEL ||
+    process.env.AWS_LAMBDA_FUNCTION_NAME ||
+    process.env.NOW_REGION ||
+    process.env.LAMBDA_TASK_ROOT ||
+    config.isVercel
+  );
+}
+
+/**
+ * Lazily obtain or initialize PostgreSQL Pool
+ */
+function getPool() {
+  if (pgPool) return pgPool;
+
+  const dbUrl = getDatabaseUrl();
+  if (!dbUrl) return null;
+
   const { Pool } = require('pg');
-  const needsSsl = !config.databaseUrl.includes('localhost') && !config.databaseUrl.includes('127.0.0.1');
+  const needsSsl = !dbUrl.includes('localhost') && !dbUrl.includes('127.0.0.1');
 
   pgPool = new Pool({
-    connectionString: config.databaseUrl,
+    connectionString: dbUrl,
     ssl: needsSsl ? { rejectUnauthorized: false } : false,
     max: 10,
     idleTimeoutMillis: 30000,
     connectionTimeoutMillis: 10000
   });
 
-  initPromise = initPostgresSchema();
-} else {
+  return pgPool;
+}
+
+/**
+ * Lazily obtain or initialize local SQLite instance (ONLY in local development)
+ */
+function getSqliteDb() {
+  if (sqliteDb) return sqliteDb;
+
+  if (isServerlessEnvironment() || config.isProduction) {
+    throw new Error(
+      'PostgreSQL connection URL is required in production / Vercel serverless environment. ' +
+      'Please configure DATABASE_URL or POSTGRES_URL in your Vercel Project Settings.'
+    );
+  }
+
   const Database = require('better-sqlite3');
   const dbDir = path.dirname(config.databasePath);
   if (!fs.existsSync(dbDir)) {
@@ -42,14 +112,21 @@ if (isPostgres) {
   sqliteDb.pragma('synchronous = NORMAL');
   sqliteDb.pragma('foreign_keys = ON');
 
-  initSqliteSchema();
+  if (!sqliteInitialized) {
+    initSqliteSchema(sqliteDb);
+    sqliteInitialized = true;
+  }
+
+  return sqliteDb;
 }
 
 /**
  * Initialize SQLite Schema
+ * @param {Object} [targetDb]
  */
-function initSqliteSchema() {
-  sqliteDb.exec(`
+function initSqliteSchema(targetDb) {
+  const db = targetDb || sqliteDb;
+  db.exec(`
     CREATE TABLE IF NOT EXISTS inquiries (
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       type TEXT NOT NULL,
@@ -173,9 +250,9 @@ function initSqliteSchema() {
     CREATE INDEX IF NOT EXISTS idx_business_settings_key ON business_settings(key);
   `);
 
-  const existingBusiness = sqliteDb.prepare("SELECT id FROM businesses WHERE name = 'MUHAR STUDIO' LIMIT 1").get();
+  const existingBusiness = db.prepare("SELECT id FROM businesses WHERE name = 'MUHAR STUDIO' LIMIT 1").get();
   if (!existingBusiness) {
-    sqliteDb.prepare(`
+    db.prepare(`
       INSERT INTO businesses (name, timezone, status)
       VALUES ('MUHAR STUDIO', 'Asia/Kolkata', 'active')
     `).run();
@@ -184,9 +261,15 @@ function initSqliteSchema() {
 
 /**
  * Initialize PostgreSQL Schema
+ * @param {Object} [pool]
  */
-async function initPostgresSchema() {
-  const client = await pgPool.connect();
+async function initPostgresSchema(pool) {
+  const targetPool = pool || getPool();
+  if (!targetPool) {
+    throw new Error('PostgreSQL Pool is not available for schema initialization.');
+  }
+
+  const client = await targetPool.connect();
   try {
     await client.query(`
       CREATE TABLE IF NOT EXISTS inquiries (
@@ -313,6 +396,7 @@ async function initPostgresSchema() {
     }
   } catch (err) {
     console.error('[Database Init Error - PostgreSQL]', err.message);
+    throw err;
   } finally {
     client.release();
   }
@@ -322,8 +406,20 @@ async function initPostgresSchema() {
  * Ensure database is initialized before executing query
  */
 async function ensureInit() {
-  if (isPostgres && initPromise) {
+  if (isPostgresConfigured()) {
+    const pool = getPool();
+    if (!pool) {
+      throw new Error('PostgreSQL database URL is not configured. Please set DATABASE_URL.');
+    }
+    if (!initPromise) {
+      initPromise = initPostgresSchema(pool).catch(err => {
+        initPromise = null;
+        throw err;
+      });
+    }
     await initPromise;
+  } else {
+    getSqliteDb();
   }
 }
 
@@ -339,7 +435,8 @@ async function ensureInit() {
 async function saveInquiry(data) {
   await ensureInit();
 
-  if (isPostgres) {
+  if (isPostgresConfigured()) {
+    const pool = getPool();
     const query = `
       INSERT INTO inquiries (
         type, name, email, phone, project_type, budget, message, ip_address, user_agent, email_sent
@@ -358,11 +455,12 @@ async function saveInquiry(data) {
       data.userAgent || null,
       data.emailSent ? 1 : 0
     ];
-    const res = await pgPool.query(query, values);
+    const res = await pool.query(query, values);
     const row = res.rows[0];
     return { id: row.id, ...data };
   } else {
-    const stmt = sqliteDb.prepare(`
+    const sqlite = getSqliteDb();
+    const stmt = sqlite.prepare(`
       INSERT INTO inquiries (
         type, name, email, phone, project_type, budget, message, ip_address, user_agent, email_sent
       ) VALUES (
@@ -393,10 +491,12 @@ async function saveInquiry(data) {
 async function updateEmailStatus(id, sent) {
   await ensureInit();
 
-  if (isPostgres) {
-    await pgPool.query('UPDATE inquiries SET email_sent = $1 WHERE id = $2', [sent ? 1 : 0, id]);
+  if (isPostgresConfigured()) {
+    const pool = getPool();
+    await pool.query('UPDATE inquiries SET email_sent = $1 WHERE id = $2', [sent ? 1 : 0, id]);
   } else {
-    const stmt = sqliteDb.prepare('UPDATE inquiries SET email_sent = ? WHERE id = ?');
+    const sqlite = getSqliteDb();
+    const stmt = sqlite.prepare('UPDATE inquiries SET email_sent = ? WHERE id = ?');
     stmt.run(sent ? 1 : 0, id);
   }
 }
@@ -415,11 +515,13 @@ async function updateInquiryStatus(id, status) {
     throw new Error(`Invalid status '${status}'. Must be one of: ${validStatuses.join(', ')}`);
   }
 
-  if (isPostgres) {
-    const res = await pgPool.query('UPDATE inquiries SET status = $1 WHERE id = $2 RETURNING *', [status, id]);
+  if (isPostgresConfigured()) {
+    const pool = getPool();
+    const res = await pool.query('UPDATE inquiries SET status = $1 WHERE id = $2 RETURNING *', [status, id]);
     return res.rows[0] || null;
   } else {
-    const stmt = sqliteDb.prepare('UPDATE inquiries SET status = ? WHERE id = ?');
+    const sqlite = getSqliteDb();
+    const stmt = sqlite.prepare('UPDATE inquiries SET status = ? WHERE id = ?');
     const info = stmt.run(status, id);
     if (info.changes === 0) return null;
     return getInquiryById(id);
@@ -434,11 +536,13 @@ async function updateInquiryStatus(id, status) {
 async function deleteInquiry(id) {
   await ensureInit();
 
-  if (isPostgres) {
-    const res = await pgPool.query('DELETE FROM inquiries WHERE id = $1', [id]);
+  if (isPostgresConfigured()) {
+    const pool = getPool();
+    const res = await pool.query('DELETE FROM inquiries WHERE id = $1', [id]);
     return (res.rowCount || 0) > 0;
   } else {
-    const stmt = sqliteDb.prepare('DELETE FROM inquiries WHERE id = ?');
+    const sqlite = getSqliteDb();
+    const stmt = sqlite.prepare('DELETE FROM inquiries WHERE id = ?');
     const info = stmt.run(id);
     return info.changes > 0;
   }
@@ -455,11 +559,13 @@ async function getInquiries(options = {}) {
   const limit = options.limit || 50;
   const offset = options.offset || 0;
 
-  if (isPostgres) {
-    const res = await pgPool.query('SELECT * FROM inquiries ORDER BY created_at DESC LIMIT $1 OFFSET $2', [limit, offset]);
+  if (isPostgresConfigured()) {
+    const pool = getPool();
+    const res = await pool.query('SELECT * FROM inquiries ORDER BY created_at DESC LIMIT $1 OFFSET $2', [limit, offset]);
     return res.rows;
   } else {
-    const stmt = sqliteDb.prepare('SELECT * FROM inquiries ORDER BY created_at DESC LIMIT ? OFFSET ?');
+    const sqlite = getSqliteDb();
+    const stmt = sqlite.prepare('SELECT * FROM inquiries ORDER BY created_at DESC LIMIT ? OFFSET ?');
     return stmt.all(limit, offset);
   }
 }
@@ -472,11 +578,13 @@ async function getInquiries(options = {}) {
 async function getInquiryById(id) {
   await ensureInit();
 
-  if (isPostgres) {
-    const res = await pgPool.query('SELECT * FROM inquiries WHERE id = $1', [id]);
+  if (isPostgresConfigured()) {
+    const pool = getPool();
+    const res = await pool.query('SELECT * FROM inquiries WHERE id = $1', [id]);
     return res.rows[0] || null;
   } else {
-    const stmt = sqliteDb.prepare('SELECT * FROM inquiries WHERE id = ?');
+    const sqlite = getSqliteDb();
+    const stmt = sqlite.prepare('SELECT * FROM inquiries WHERE id = ?');
     return stmt.get(id) || null;
   }
 }
@@ -501,7 +609,8 @@ async function getFilteredInquiries(params = {}) {
   const parsedLimit = Math.min(Math.max(parseInt(limit, 10) || 50, 1), 200);
   const parsedOffset = Math.max(parseInt(offset, 10) || 0, 0);
 
-  if (isPostgres) {
+  if (isPostgresConfigured()) {
+    const pool = getPool();
     let whereClauses = [];
     let values = [];
     let valIdx = 1;
@@ -526,18 +635,19 @@ async function getFilteredInquiries(params = {}) {
     const orderSql = sort === 'oldest' ? 'ORDER BY created_at ASC' : 'ORDER BY created_at DESC';
 
     const countQuery = `SELECT COUNT(*) AS count FROM inquiries ${whereSql}`;
-    const countRes = await pgPool.query(countQuery, values);
+    const countRes = await pool.query(countQuery, values);
     const total = parseInt(countRes.rows[0].count, 10) || 0;
 
     const dataQuery = `SELECT * FROM inquiries ${whereSql} ${orderSql} LIMIT $${valIdx++} OFFSET $${valIdx++}`;
     const dataValues = [...values, parsedLimit, parsedOffset];
-    const dataRes = await pgPool.query(dataQuery, dataValues);
+    const dataRes = await pool.query(dataQuery, dataValues);
 
     return {
       inquiries: dataRes.rows,
       total
     };
   } else {
+    const sqlite = getSqliteDb();
     let query = `SELECT * FROM inquiries WHERE 1=1`;
     let countQuery = `SELECT COUNT(*) AS count FROM inquiries WHERE 1=1`;
     const bindings = {};
@@ -570,12 +680,12 @@ async function getFilteredInquiries(params = {}) {
     bindings.limit = parsedLimit;
     bindings.offset = parsedOffset;
 
-    const inquiries = sqliteDb.prepare(query).all(bindings);
+    const inquiries = sqlite.prepare(query).all(bindings);
 
     const countBindings = { ...bindings };
     delete countBindings.limit;
     delete countBindings.offset;
-    const countRow = sqliteDb.prepare(countQuery).get(countBindings);
+    const countRow = sqlite.prepare(countQuery).get(countBindings);
 
     return {
       inquiries,
@@ -591,7 +701,8 @@ async function getFilteredInquiries(params = {}) {
 async function getInquiryStats() {
   await ensureInit();
 
-  if (isPostgres) {
+  if (isPostgresConfigured()) {
+    const pool = getPool();
     const query = `
       SELECT
         COUNT(*) AS total,
@@ -602,7 +713,7 @@ async function getInquiryStats() {
         COUNT(*) FILTER (WHERE type = 'contact') AS contacts
       FROM inquiries
     `;
-    const res = await pgPool.query(query);
+    const res = await pool.query(query);
     const row = res.rows[0] || {};
 
     return {
@@ -614,12 +725,13 @@ async function getInquiryStats() {
       contacts: parseInt(row.contacts, 10) || 0
     };
   } else {
-    const totalRow = sqliteDb.prepare(`SELECT COUNT(*) AS total FROM inquiries`).get();
-    const newRow = sqliteDb.prepare(`SELECT COUNT(*) AS count FROM inquiries WHERE status = 'new'`).get();
-    const contactedRow = sqliteDb.prepare(`SELECT COUNT(*) AS count FROM inquiries WHERE status = 'contacted'`).get();
-    const archivedRow = sqliteDb.prepare(`SELECT COUNT(*) AS count FROM inquiries WHERE status = 'archived'`).get();
-    const consultationRow = sqliteDb.prepare(`SELECT COUNT(*) AS count FROM inquiries WHERE type = 'consultation'`).get();
-    const contactRow = sqliteDb.prepare(`SELECT COUNT(*) AS count FROM inquiries WHERE type = 'contact'`).get();
+    const sqlite = getSqliteDb();
+    const totalRow = sqlite.prepare(`SELECT COUNT(*) AS total FROM inquiries`).get();
+    const newRow = sqlite.prepare(`SELECT COUNT(*) AS count FROM inquiries WHERE status = 'new'`).get();
+    const contactedRow = sqlite.prepare(`SELECT COUNT(*) AS count FROM inquiries WHERE status = 'contacted'`).get();
+    const archivedRow = sqlite.prepare(`SELECT COUNT(*) AS count FROM inquiries WHERE status = 'archived'`).get();
+    const consultationRow = sqlite.prepare(`SELECT COUNT(*) AS count FROM inquiries WHERE type = 'consultation'`).get();
+    const contactRow = sqlite.prepare(`SELECT COUNT(*) AS count FROM inquiries WHERE type = 'contact'`).get();
 
     return {
       total: totalRow ? totalRow.total : 0,
@@ -644,11 +756,13 @@ async function getInquiryStats() {
 async function getBusinessById(id) {
   await ensureInit();
 
-  if (isPostgres) {
-    const res = await pgPool.query('SELECT * FROM businesses WHERE id = $1', [id]);
+  if (isPostgresConfigured()) {
+    const pool = getPool();
+    const res = await pool.query('SELECT * FROM businesses WHERE id = $1', [id]);
     return res.rows[0] || null;
   } else {
-    const stmt = sqliteDb.prepare('SELECT * FROM businesses WHERE id = ?');
+    const sqlite = getSqliteDb();
+    const stmt = sqlite.prepare('SELECT * FROM businesses WHERE id = ?');
     return stmt.get(id) || null;
   }
 }
@@ -661,11 +775,13 @@ async function getBusinessById(id) {
 async function getBusinessByName(name) {
   await ensureInit();
 
-  if (isPostgres) {
-    const res = await pgPool.query('SELECT * FROM businesses WHERE name = $1', [name]);
+  if (isPostgresConfigured()) {
+    const pool = getPool();
+    const res = await pool.query('SELECT * FROM businesses WHERE name = $1', [name]);
     return res.rows[0] || null;
   } else {
-    const stmt = sqliteDb.prepare('SELECT * FROM businesses WHERE name = ?');
+    const sqlite = getSqliteDb();
+    const stmt = sqlite.prepare('SELECT * FROM businesses WHERE name = ?');
     return stmt.get(name) || null;
   }
 }
@@ -680,11 +796,13 @@ async function getBusinessByName(name) {
 async function getBusinessSetting(businessId, key, defaultValue = null) {
   await ensureInit();
 
-  if (isPostgres) {
-    const res = await pgPool.query('SELECT value FROM business_settings WHERE business_id = $1 AND key = $2', [businessId, key]);
+  if (isPostgresConfigured()) {
+    const pool = getPool();
+    const res = await pool.query('SELECT value FROM business_settings WHERE business_id = $1 AND key = $2', [businessId, key]);
     return res.rows[0] ? res.rows[0].value : defaultValue;
   } else {
-    const stmt = sqliteDb.prepare('SELECT value FROM business_settings WHERE business_id = ? AND key = ?');
+    const sqlite = getSqliteDb();
+    const stmt = sqlite.prepare('SELECT value FROM business_settings WHERE business_id = ? AND key = ?');
     const row = stmt.get(businessId, key);
     return row ? row.value : defaultValue;
   }
@@ -698,15 +816,17 @@ async function getBusinessSetting(businessId, key, defaultValue = null) {
 async function getBusinessSettings(businessId) {
   await ensureInit();
 
-  if (isPostgres) {
-    const res = await pgPool.query('SELECT key, value FROM business_settings WHERE business_id = $1', [businessId]);
+  if (isPostgresConfigured()) {
+    const pool = getPool();
+    const res = await pool.query('SELECT key, value FROM business_settings WHERE business_id = $1', [businessId]);
     const settings = {};
     for (const row of res.rows) {
       settings[row.key] = row.value;
     }
     return settings;
   } else {
-    const stmt = sqliteDb.prepare('SELECT key, value FROM business_settings WHERE business_id = ?');
+    const sqlite = getSqliteDb();
+    const stmt = sqlite.prepare('SELECT key, value FROM business_settings WHERE business_id = ?');
     const rows = stmt.all(businessId);
     const settings = {};
     for (const row of rows) {
@@ -726,7 +846,8 @@ async function getBusinessSettings(businessId) {
 async function setBusinessSetting(businessId, key, value) {
   await ensureInit();
 
-  if (isPostgres) {
+  if (isPostgresConfigured()) {
+    const pool = getPool();
     const query = `
       INSERT INTO business_settings (business_id, key, value, updated_at)
       VALUES ($1, $2, $3, CURRENT_TIMESTAMP)
@@ -734,10 +855,11 @@ async function setBusinessSetting(businessId, key, value) {
         value = EXCLUDED.value,
         updated_at = CURRENT_TIMESTAMP
     `;
-    await pgPool.query(query, [businessId, key, String(value)]);
+    await pool.query(query, [businessId, key, String(value)]);
     return { businessId, key, value };
   } else {
-    const stmt = sqliteDb.prepare(`
+    const sqlite = getSqliteDb();
+    const stmt = sqlite.prepare(`
       INSERT INTO business_settings (business_id, key, value, updated_at)
       VALUES (?, ?, ?, CURRENT_TIMESTAMP)
       ON CONFLICT(business_id, key) DO UPDATE SET
@@ -758,11 +880,13 @@ async function setBusinessSetting(businessId, key, value) {
 async function getVoiceAgentByProviderId(provider, providerAgentId) {
   await ensureInit();
 
-  if (isPostgres) {
-    const res = await pgPool.query('SELECT * FROM voice_agents WHERE provider = $1 AND provider_agent_id = $2', [provider, providerAgentId]);
+  if (isPostgresConfigured()) {
+    const pool = getPool();
+    const res = await pool.query('SELECT * FROM voice_agents WHERE provider = $1 AND provider_agent_id = $2', [provider, providerAgentId]);
     return res.rows[0] || null;
   } else {
-    const stmt = sqliteDb.prepare('SELECT * FROM voice_agents WHERE provider = ? AND provider_agent_id = ?');
+    const sqlite = getSqliteDb();
+    const stmt = sqlite.prepare('SELECT * FROM voice_agents WHERE provider = ? AND provider_agent_id = ?');
     return stmt.get(provider, providerAgentId) || null;
   }
 }
@@ -775,11 +899,13 @@ async function getVoiceAgentByProviderId(provider, providerAgentId) {
 async function getPhoneNumberRecord(phoneNumber) {
   await ensureInit();
 
-  if (isPostgres) {
-    const res = await pgPool.query('SELECT * FROM phone_numbers WHERE phone_number = $1', [phoneNumber]);
+  if (isPostgresConfigured()) {
+    const pool = getPool();
+    const res = await pool.query('SELECT * FROM phone_numbers WHERE phone_number = $1', [phoneNumber]);
     return res.rows[0] || null;
   } else {
-    const stmt = sqliteDb.prepare('SELECT * FROM phone_numbers WHERE phone_number = ?');
+    const sqlite = getSqliteDb();
+    const stmt = sqlite.prepare('SELECT * FROM phone_numbers WHERE phone_number = ?');
     return stmt.get(phoneNumber) || null;
   }
 }
@@ -791,12 +917,15 @@ async function getPhoneNumberRecord(phoneNumber) {
 async function pingDatabase() {
   try {
     await ensureInit();
-    if (isPostgres) {
-      const res = await pgPool.query('SELECT 1 AS ok');
-      return res.rows.length > 0 && res.rows[0].ok === 1;
+    if (isPostgresConfigured()) {
+      const pool = getPool();
+      if (!pool) return false;
+      const res = await pool.query('SELECT 1 AS ok');
+      return res.rows.length > 0 && (res.rows[0].ok === 1 || res.rows[0].ok === '1');
     } else {
-      const ping = sqliteDb.prepare('SELECT 1 AS ok').get();
-      return ping && ping.ok === 1;
+      const sqlite = getSqliteDb();
+      const ping = sqlite.prepare('SELECT 1 AS ok').get();
+      return Boolean(ping && ping.ok === 1);
     }
   } catch {
     return false;
@@ -805,10 +934,13 @@ async function pingDatabase() {
 
 module.exports = {
   get db() {
-    return sqliteDb;
+    return getSqliteDb();
+  },
+  get pool() {
+    return getPool();
   },
   get isPostgres() {
-    return isPostgres;
+    return isPostgresConfigured();
   },
   saveInquiry,
   updateEmailStatus,
