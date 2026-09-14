@@ -137,6 +137,21 @@ db.exec(`
 
   CREATE INDEX IF NOT EXISTS idx_call_events_call_id ON call_events(call_id);
   CREATE INDEX IF NOT EXISTS idx_call_events_provider_event_id ON call_events(provider_event_id);
+
+  -- 6. Business Settings (Key-Value metadata per business: fallback numbers, operating hours, etc.)
+  CREATE TABLE IF NOT EXISTS business_settings (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    business_id INTEGER NOT NULL,
+    key TEXT NOT NULL,
+    value TEXT NOT NULL,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE,
+    UNIQUE(business_id, key)
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_business_settings_business_id ON business_settings(business_id);
+  CREATE INDEX IF NOT EXISTS idx_business_settings_key ON business_settings(key);
 `);
 
 // Idempotent initial seed for default studio business
@@ -328,6 +343,94 @@ function getInquiryStats() {
   };
 }
 
+/**
+ * Get business by ID
+ * @param {number} id
+ * @returns {Object|null}
+ */
+function getBusinessById(id) {
+  const stmt = db.prepare('SELECT * FROM businesses WHERE id = ?');
+  return stmt.get(id) || null;
+}
+
+/**
+ * Get business by Name
+ * @param {string} name
+ * @returns {Object|null}
+ */
+function getBusinessByName(name) {
+  const stmt = db.prepare('SELECT * FROM businesses WHERE name = ?');
+  return stmt.get(name) || null;
+}
+
+/**
+ * Get single business setting value
+ * @param {number} businessId
+ * @param {string} key
+ * @param {any} [defaultValue=null]
+ * @returns {string|null}
+ */
+function getBusinessSetting(businessId, key, defaultValue = null) {
+  const stmt = db.prepare('SELECT value FROM business_settings WHERE business_id = ? AND key = ?');
+  const row = stmt.get(businessId, key);
+  return row ? row.value : defaultValue;
+}
+
+/**
+ * Get all settings for a business as a key-value object
+ * @param {number} businessId
+ * @returns {Object}
+ */
+function getBusinessSettings(businessId) {
+  const stmt = db.prepare('SELECT key, value FROM business_settings WHERE business_id = ?');
+  const rows = stmt.all(businessId);
+  const settings = {};
+  for (const row of rows) {
+    settings[row.key] = row.value;
+  }
+  return settings;
+}
+
+/**
+ * Set or update a business setting
+ * @param {number} businessId
+ * @param {string} key
+ * @param {string} value
+ * @returns {Object}
+ */
+function setBusinessSetting(businessId, key, value) {
+  const stmt = db.prepare(`
+    INSERT INTO business_settings (business_id, key, value, updated_at)
+    VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+    ON CONFLICT(business_id, key) DO UPDATE SET
+      value = excluded.value,
+      updated_at = CURRENT_TIMESTAMP
+  `);
+  stmt.run(businessId, key, String(value));
+  return { businessId, key, value };
+}
+
+/**
+ * Lookup voice agent by provider and provider agent ID
+ * @param {string} provider
+ * @param {string} providerAgentId
+ * @returns {Object|null}
+ */
+function getVoiceAgentByProviderId(provider, providerAgentId) {
+  const stmt = db.prepare('SELECT * FROM voice_agents WHERE provider = ? AND provider_agent_id = ?');
+  return stmt.get(provider, providerAgentId) || null;
+}
+
+/**
+ * Lookup phone number record
+ * @param {string} phoneNumber
+ * @returns {Object|null}
+ */
+function getPhoneNumberRecord(phoneNumber) {
+  const stmt = db.prepare('SELECT * FROM phone_numbers WHERE phone_number = ?');
+  return stmt.get(phoneNumber) || null;
+}
+
 module.exports = {
   db,
   saveInquiry,
@@ -337,5 +440,13 @@ module.exports = {
   getInquiries,
   getInquiryById,
   getFilteredInquiries,
-  getInquiryStats
+  getInquiryStats,
+  getBusinessById,
+  getBusinessByName,
+  getBusinessSetting,
+  getBusinessSettings,
+  setBusinessSetting,
+  getVoiceAgentByProviderId,
+  getPhoneNumberRecord
 };
+
