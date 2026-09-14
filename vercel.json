@@ -1,0 +1,58 @@
+{
+  "version": 2,
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "admin/**,404.html,src/**"
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/admin",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/admin/(.*)",
+      "dest": "/api/index.js"
+    },
+    {
+      "src": "/portfolio",
+      "dest": "/portfolio.html"
+    },
+    {
+      "src": "/approach",
+      "dest": "/approach.html"
+    },
+    {
+      "src": "/privacy-policy",
+      "dest": "/privacy-policy.html"
+    },
+    {
+      "src": "/terms",
+      "dest": "/terms.html"
+    },
+    {
+      "src": "/services/interior-design",
+      "dest": "/services/interior-design.html"
+    },
+    {
+      "src": "/services/space-planning",
+      "dest": "/services/space-planning.html"
+    },
+    {
+      "src": "/services/design-execution",
+      "dest": "/services/design-execution.html"
+    },
+    {
+      "src": "/services/styling-decor",
+      "dest": "/services/styling-decor.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/$1"
+    }
+  ]
+}

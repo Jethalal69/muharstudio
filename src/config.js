@@ -25,7 +25,9 @@ const config = {
     maxAgeMs: 24 * 60 * 60 * 1000 // 24 hours
   },
 
-  // Database
+  // Database (PostgreSQL for cloud/Vercel, SQLite for local fallback)
+  databaseUrl: (process.env.DATABASE_URL || process.env.POSTGRES_URL || '').trim(),
+  isPostgres: Boolean((process.env.DATABASE_URL || process.env.POSTGRES_URL || '').trim()),
   databasePath: process.env.DATABASE_PATH
     ? path.resolve(process.env.DATABASE_PATH)
     : path.join(__dirname, '..', 'data', 'inquiries.db'),

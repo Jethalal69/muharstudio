@@ -29,8 +29,8 @@ router.post(
 
       const userAgent = req.headers['user-agent'] || '';
 
-      // 1. Persist inquiry into SQLite database
-      const record = db.saveInquiry({
+      // 1. Persist inquiry into database
+      const record = await db.saveInquiry({
         type: 'consultation',
         name,
         email,
@@ -54,9 +54,9 @@ router.post(
         budget,
         message,
         ipAddress
-      }).then(emailResult => {
+      }).then(async emailResult => {
         if (emailResult.success) {
-          db.updateEmailStatus(record.id, true);
+          await db.updateEmailStatus(record.id, true);
         }
       }).catch(err => {
         console.error(`[Inquiry #${record.id}] Email dispatch warning:`, err.message);

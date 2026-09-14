@@ -5,8 +5,8 @@
 
 const db = require('./src/db');
 
-function viewInquiries() {
-  const inquiries = db.getInquiries({ limit: 100 });
+async function viewInquiries() {
+  const inquiries = await db.getInquiries({ limit: 100 });
 
   console.log('\n========================================================================================');
   console.log('🏛️  MUHAR STUDIO — CLIENT INQUIRIES & CONSULTATION REQUESTS');

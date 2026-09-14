@@ -84,11 +84,15 @@ router.get('/me', requireAdminAuth, (req, res) => {
  * GET /api/admin/inquiries
  * Retrieve filtered inquiries and statistical overview
  */
-router.get('/inquiries', requireAdminAuth, (req, res) => {
+/**
+ * GET /api/admin/inquiries
+ * Retrieve filtered inquiries and statistical overview
+ */
+router.get('/inquiries', requireAdminAuth, async (req, res) => {
   try {
     const { type, status, sort, search, limit, offset } = req.query;
     
-    const result = db.getFilteredInquiries({
+    const result = await db.getFilteredInquiries({
       type,
       status,
       sort,
@@ -97,7 +101,7 @@ router.get('/inquiries', requireAdminAuth, (req, res) => {
       offset: parseInt(offset, 10) || 0
     });
 
-    const stats = db.getInquiryStats();
+    const stats = await db.getInquiryStats();
 
     return res.status(200).json({
       success: true,
@@ -118,14 +122,14 @@ router.get('/inquiries', requireAdminAuth, (req, res) => {
  * GET /api/admin/inquiries/:id
  * Retrieve single inquiry detail by ID
  */
-router.get('/inquiries/:id', requireAdminAuth, (req, res) => {
+router.get('/inquiries/:id', requireAdminAuth, async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10);
     if (isNaN(id) || id <= 0) {
       return res.status(400).json({ success: false, message: 'Invalid inquiry ID.' });
     }
 
-    const inquiry = db.getInquiryById(id);
+    const inquiry = await db.getInquiryById(id);
     if (!inquiry) {
       return res.status(404).json({ success: false, message: 'Inquiry not found.' });
     }
@@ -147,7 +151,7 @@ router.get('/inquiries/:id', requireAdminAuth, (req, res) => {
  * PATCH /api/admin/inquiries/:id/status
  * Update status ('new', 'contacted', 'archived')
  */
-router.patch('/inquiries/:id/status', requireAdminAuth, (req, res) => {
+router.patch('/inquiries/:id/status', requireAdminAuth, async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10);
     const { status } = req.body;
@@ -163,12 +167,12 @@ router.patch('/inquiries/:id/status', requireAdminAuth, (req, res) => {
       });
     }
 
-    const updated = db.updateInquiryStatus(id, status);
+    const updated = await db.updateInquiryStatus(id, status);
     if (!updated) {
       return res.status(404).json({ success: false, message: 'Inquiry not found.' });
     }
 
-    const stats = db.getInquiryStats();
+    const stats = await db.getInquiryStats();
 
     return res.status(200).json({
       success: true,
@@ -189,14 +193,14 @@ router.patch('/inquiries/:id/status', requireAdminAuth, (req, res) => {
  * DELETE /api/admin/inquiries/:id
  * Delete inquiry by ID
  */
-router.delete('/inquiries/:id', requireAdminAuth, (req, res) => {
+router.delete('/inquiries/:id', requireAdminAuth, async (req, res) => {
   try {
     const id = parseInt(req.params.id, 10);
     if (isNaN(id) || id <= 0) {
       return res.status(400).json({ success: false, message: 'Invalid inquiry ID.' });
     }
 
-    const deleted = db.deleteInquiry(id);
+    const deleted = await db.deleteInquiry(id);
     if (!deleted) {
       return res.status(404).json({ success: false, message: 'Inquiry not found.' });
     }

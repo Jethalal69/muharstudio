@@ -200,16 +200,21 @@ app.use((err, req, res, next) => {
   res.status(500).send('500 Internal Server Error');
 });
 
-// Start Server
-const server = app.listen(config.port, () => {
-  console.log(`\n============================================================`);
-  console.log(`🏛️  MUHAR STUDIO backend server running in ${config.nodeEnv.toUpperCase()} mode`);
-  console.log(`📍 Public Site: http://localhost:${config.port}`);
-  console.log(`🔐 Admin Portal: http://localhost:${config.port}/admin`);
-  console.log(`🩺 Health check: http://localhost:${config.port}/api/health`);
-  console.log(`💾 Database: ${config.databasePath}`);
-  console.log(`✉️  SMTP Configured: ${config.smtp.isConfigured() ? 'YES' : 'NO (Simulation Mode)'}`);
-  console.log(`============================================================\n`);
-});
+// Start Server if executed directly (Standalone Node process)
+let server = null;
+if (require.main === module) {
+  server = app.listen(config.port, () => {
+    console.log(`\n============================================================`);
+    console.log(`🏛️  MUHAR STUDIO backend server running in ${config.nodeEnv.toUpperCase()} mode`);
+    console.log(`📍 Public Site: http://localhost:${config.port}`);
+    console.log(`🔐 Admin Portal: http://localhost:${config.port}/admin`);
+    console.log(`🩺 Health check: http://localhost:${config.port}/api/health`);
+    console.log(`💾 Database: ${config.isPostgres ? 'PostgreSQL (Cloud)' : config.databasePath}`);
+    console.log(`✉️  SMTP Configured: ${config.smtp.isConfigured() ? 'YES' : 'NO (Simulation Mode)'}`);
+    console.log(`============================================================\n`);
+  });
+}
 
-module.exports = { app, server };
+module.exports = app;
+module.exports.app = app;
+module.exports.server = server;
