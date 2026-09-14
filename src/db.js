@@ -21,8 +21,9 @@ const db = new Database(config.databasePath);
 // Enable Write-Ahead Logging (WAL) for high performance & concurrency
 db.pragma('journal_mode = WAL');
 db.pragma('synchronous = NORMAL');
+db.pragma('foreign_keys = ON');
 
-// Initialize schema
+// Initialize schema (Existing inquiries + AI Voice Receptionist tables)
 db.exec(`
   CREATE TABLE IF NOT EXISTS inquiries (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -43,7 +44,109 @@ db.exec(`
   CREATE INDEX IF NOT EXISTS idx_inquiries_created_at ON inquiries(created_at);
   CREATE INDEX IF NOT EXISTS idx_inquiries_type ON inquiries(type);
   CREATE INDEX IF NOT EXISTS idx_inquiries_status ON inquiries(status);
+
+  -- 1. Businesses
+  CREATE TABLE IF NOT EXISTS businesses (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    name TEXT NOT NULL,
+    timezone TEXT NOT NULL DEFAULT 'Asia/Kolkata',
+    status TEXT NOT NULL DEFAULT 'active',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_businesses_status ON businesses(status);
+
+  -- 2. Voice Agents
+  CREATE TABLE IF NOT EXISTS voice_agents (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    business_id INTEGER NOT NULL,
+    provider TEXT NOT NULL,
+    provider_agent_id TEXT,
+    name TEXT NOT NULL,
+    language TEXT,
+    status TEXT NOT NULL DEFAULT 'active',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_voice_agents_business_id ON voice_agents(business_id);
+
+  -- 3. Phone Numbers
+  CREATE TABLE IF NOT EXISTS phone_numbers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    business_id INTEGER NOT NULL,
+    voice_agent_id INTEGER,
+    phone_number TEXT NOT NULL,
+    provider TEXT NOT NULL,
+    provider_phone_id TEXT,
+    status TEXT NOT NULL DEFAULT 'active',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE,
+    FOREIGN KEY (voice_agent_id) REFERENCES voice_agents(id) ON DELETE SET NULL
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_phone_numbers_business_id ON phone_numbers(business_id);
+  CREATE INDEX IF NOT EXISTS idx_phone_numbers_phone_number ON phone_numbers(phone_number);
+
+  -- 4. Calls
+  CREATE TABLE IF NOT EXISTS calls (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    business_id INTEGER NOT NULL,
+    voice_agent_id INTEGER,
+    phone_number_id INTEGER,
+    provider TEXT NOT NULL,
+    provider_call_id TEXT,
+    direction TEXT NOT NULL DEFAULT 'inbound',
+    caller_number TEXT,
+    called_number TEXT,
+    status TEXT NOT NULL DEFAULT 'initiated',
+    started_at DATETIME,
+    ended_at DATETIME,
+    duration_seconds INTEGER,
+    recording_url TEXT,
+    transcript TEXT,
+    summary TEXT,
+    intent TEXT,
+    outcome TEXT,
+    lead_score INTEGER,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (business_id) REFERENCES businesses(id) ON DELETE CASCADE,
+    FOREIGN KEY (voice_agent_id) REFERENCES voice_agents(id) ON DELETE SET NULL,
+    FOREIGN KEY (phone_number_id) REFERENCES phone_numbers(id) ON DELETE SET NULL
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_calls_business_id ON calls(business_id);
+  CREATE INDEX IF NOT EXISTS idx_calls_provider_call_id ON calls(provider_call_id);
+  CREATE INDEX IF NOT EXISTS idx_calls_caller_number ON calls(caller_number);
+  CREATE INDEX IF NOT EXISTS idx_calls_created_at ON calls(created_at);
+
+  -- 5. Call Events
+  CREATE TABLE IF NOT EXISTS call_events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    call_id INTEGER NOT NULL,
+    event_type TEXT NOT NULL,
+    provider_event_id TEXT,
+    payload TEXT,
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (call_id) REFERENCES calls(id) ON DELETE CASCADE
+  );
+
+  CREATE INDEX IF NOT EXISTS idx_call_events_call_id ON call_events(call_id);
+  CREATE INDEX IF NOT EXISTS idx_call_events_provider_event_id ON call_events(provider_event_id);
 `);
+
+// Idempotent initial seed for default studio business
+const existingBusiness = db.prepare("SELECT id FROM businesses WHERE name = 'MUHAR STUDIO' LIMIT 1").get();
+if (!existingBusiness) {
+  db.prepare(`
+    INSERT INTO businesses (name, timezone, status)
+    VALUES ('MUHAR STUDIO', 'Asia/Kolkata', 'active')
+  `).run();
+}
 
 /**
  * Save a new inquiry to the database
