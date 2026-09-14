@@ -42,6 +42,13 @@ const config = {
     isConfigured: () => Boolean(process.env.SMTP_HOST && process.env.SMTP_USER && process.env.SMTP_PASS)
   },
 
+  // Retell AI Configuration (Voice AI Receptionist)
+  retell: {
+    apiKey: process.env.RETELL_API_KEY || '',
+    agentId: process.env.RETELL_AGENT_ID || '',
+    isConfigured: () => Boolean(process.env.RETELL_API_KEY && process.env.RETELL_API_KEY.trim())
+  },
+
   // Security & Rate Limiting
   rateLimit: {
     windowMs: parseInt(process.env.RATE_LIMIT_WINDOW_MS, 10) || 15 * 60 * 1000, // 15 minutes
