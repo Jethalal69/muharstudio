@@ -13,12 +13,15 @@ router.get('/', async (req, res) => {
   try {
     const isDbHealthy = await db.pingDatabase();
 
-    const baseDir = path.resolve(__dirname, '..');
+    const cwd = process.cwd();
+    const serverDir = path.resolve(__dirname, '../..');
     const filesCheck = {
-      baseDir,
-      hasNavbarCss: fs.existsSync(path.join(baseDir, 'navbar.css')),
-      hasHeroImage: fs.existsSync(path.join(baseDir, 'assets', 'hero-image.jpeg')),
-      rootDirContents: fs.readdirSync(baseDir).filter(f => !f.startsWith('.'))
+      cwd,
+      cwdContents: fs.existsSync(cwd) ? fs.readdirSync(cwd) : [],
+      serverDir,
+      serverDirContents: fs.existsSync(serverDir) ? fs.readdirSync(serverDir) : [],
+      hasNavbarCssInCwd: fs.existsSync(path.join(cwd, 'navbar.css')),
+      hasNavbarCssInServerDir: fs.existsSync(path.join(serverDir, 'navbar.css'))
     };
 
     return res.status(200).json({
