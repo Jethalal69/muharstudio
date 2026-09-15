@@ -38,6 +38,10 @@
     {
       "source": "/admin/(.*)",
       "destination": "/api"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/api"
     }
   ]
 }
