@@ -98,6 +98,20 @@ app.use((req, res, next) => {
 // ============================================================================
 // API ROUTES
 // ============================================================================
+app.get('/api', (req, res) => {
+  res.status(200).json({
+    status: 'online',
+    name: 'MUHAR STUDIO API',
+    version: '1.0.0',
+    endpoints: {
+      health: '/api/health',
+      consultation: '/api/consultation',
+      contact: '/api/contact',
+      admin: '/admin'
+    }
+  });
+});
+
 app.use('/api/consultation', consultationRoutes);
 app.use('/api/contact', contactRoutes);
 app.use('/api/health', healthRoutes);
