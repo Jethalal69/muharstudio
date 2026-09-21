@@ -4,6 +4,7 @@
  */
 
 const crypto = require('crypto');
+const bcrypt = require('bcrypt');
 const rateLimit = require('express-rate-limit');
 const config = require('../config');
 
@@ -16,7 +17,7 @@ const config = require('../config');
 function generateAdminToken(username) {
   const expiresAt = Date.now() + config.admin.maxAgeMs;
   const payload = Buffer.from(`${username}:${expiresAt}`).toString('base64url');
-  
+
   const signature = crypto
     .createHmac('sha256', config.admin.sessionSecret)
     .update(payload)
@@ -71,24 +72,27 @@ function verifyAdminToken(token) {
 }
 
 /**
- * Timing-safe credential comparison
+ * Verify admin credentials using bcrypt password hash
  */
-function verifyCredentials(username, password) {
+async function verifyCredentials(username, password) {
   if (!username || !password) return false;
 
   const expectedUser = config.admin.username;
-  const expectedPass = config.admin.password;
+  const passwordHash = config.admin.password;
 
   try {
     const userBuffer = Buffer.from(String(username));
     const expUserBuffer = Buffer.from(String(expectedUser));
-    const passBuffer = Buffer.from(String(password));
-    const expPassBuffer = Buffer.from(String(expectedPass));
 
-    const userMatch = userBuffer.length === expUserBuffer.length && crypto.timingSafeEqual(userBuffer, expUserBuffer);
-    const passMatch = passBuffer.length === expPassBuffer.length && crypto.timingSafeEqual(passBuffer, expPassBuffer);
+    const userMatch =
+      userBuffer.length === expUserBuffer.length &&
+      crypto.timingSafeEqual(userBuffer, expUserBuffer);
 
-    return userMatch && passMatch;
+    if (!userMatch) {
+      return false;
+    }
+
+    return await bcrypt.compare(String(password), passwordHash);
   } catch (err) {
     return false;
   }

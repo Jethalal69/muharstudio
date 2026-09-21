@@ -50,7 +50,7 @@ app.use(
     origin: config.allowedOrigin === '*' ? true : config.allowedOrigin,
     credentials: true,
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization']
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRF-Token']
   })
 );
 
@@ -67,8 +67,8 @@ app.use(express.urlencoded({ extended: true, limit: '10kb' }));
 // ============================================================================
 app.use((req, res, next) => {
   const normalizedPath = path.normalize(decodeURIComponent(req.path)).toLowerCase();
-  
-  const isBlocked = 
+
+  const isBlocked =
     normalizedPath.startsWith('/data') ||
     normalizedPath.startsWith('\\data') ||
     normalizedPath.startsWith('/src') ||

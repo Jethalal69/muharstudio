@@ -5,6 +5,12 @@
 
 const express = require('express');
 const router = express.Router();
+
+// existing imports...
+const {
+  generateCsrfToken,
+  requireCsrfToken
+} = require('../middleware/csrf');
 const config = require('../config');
 const db = require('../db');
 const {
@@ -18,7 +24,7 @@ const {
  * POST /api/admin/login
  * Authenticate admin and issue signed session cookie
  */
-router.post('/login', adminLoginLimiter, (req, res) => {
+router.post('/login', adminLoginLimiter, async (req, res) => {
   const { username, password } = req.body || {};
 
   if (!username || !password) {
@@ -28,7 +34,7 @@ router.post('/login', adminLoginLimiter, (req, res) => {
     });
   }
 
-  if (!verifyCredentials(username, password)) {
+  if (!(await verifyCredentials(username, password))) {
     return res.status(401).json({
       success: false,
       message: 'Invalid administrative credentials.'
@@ -53,10 +59,19 @@ router.post('/login', adminLoginLimiter, (req, res) => {
 });
 
 /**
- * POST /api/admin/logout
- * Invalidate session and clear cookie
+ * GET /api/admin/csrf
+ * Generate CSRF token for authenticated admin
  */
-router.post('/logout', (req, res) => {
+router.get('/csrf', requireAdminAuth, (req, res) => {
+  const token = generateCsrfToken(req.adminUser.username);
+
+  res.json({
+    success: true,
+    csrfToken: token
+  });
+});
+
+router.post('/logout', requireAdminAuth, requireCsrfToken, (req, res) => {
   res.clearCookie(config.admin.cookieName, {
     httpOnly: true,
     secure: config.isProduction,
@@ -91,7 +106,7 @@ router.get('/me', requireAdminAuth, (req, res) => {
 router.get('/inquiries', requireAdminAuth, async (req, res) => {
   try {
     const { type, status, sort, search, limit, offset } = req.query;
-    
+
     const result = await db.getFilteredInquiries({
       type,
       status,
@@ -151,71 +166,79 @@ router.get('/inquiries/:id', requireAdminAuth, async (req, res) => {
  * PATCH /api/admin/inquiries/:id/status
  * Update status ('new', 'contacted', 'archived')
  */
-router.patch('/inquiries/:id/status', requireAdminAuth, async (req, res) => {
-  try {
-    const id = parseInt(req.params.id, 10);
-    const { status } = req.body;
+router.patch(
+  '/inquiries/:id/status',
+  requireAdminAuth,
+  requireCsrfToken,
+  async (req, res) => {
+    try {
+      const id = parseInt(req.params.id, 10);
+      const { status } = req.body;
 
-    if (isNaN(id) || id <= 0) {
-      return res.status(400).json({ success: false, message: 'Invalid inquiry ID.' });
-    }
+      if (isNaN(id) || id <= 0) {
+        return res.status(400).json({ success: false, message: 'Invalid inquiry ID.' });
+      }
 
-    if (!status || !['new', 'contacted', 'archived'].includes(status)) {
-      return res.status(400).json({
+      if (!status || !['new', 'contacted', 'archived'].includes(status)) {
+        return res.status(400).json({
+          success: false,
+          message: "Status must be one of: 'new', 'contacted', 'archived'."
+        });
+      }
+
+      const updated = await db.updateInquiryStatus(id, status);
+      if (!updated) {
+        return res.status(404).json({ success: false, message: 'Inquiry not found.' });
+      }
+
+      const stats = await db.getInquiryStats();
+
+      return res.status(200).json({
+        success: true,
+        message: `Inquiry status updated to '${status}'.`,
+        inquiry: updated,
+        stats
+      });
+    } catch (err) {
+      console.error('Error updating inquiry status:', err);
+      return res.status(500).json({
         success: false,
-        message: "Status must be one of: 'new', 'contacted', 'archived'."
+        message: err.message || 'Failed to update status.'
       });
     }
-
-    const updated = await db.updateInquiryStatus(id, status);
-    if (!updated) {
-      return res.status(404).json({ success: false, message: 'Inquiry not found.' });
-    }
-
-    const stats = await db.getInquiryStats();
-
-    return res.status(200).json({
-      success: true,
-      message: `Inquiry status updated to '${status}'.`,
-      inquiry: updated,
-      stats
-    });
-  } catch (err) {
-    console.error('Error updating inquiry status:', err);
-    return res.status(500).json({
-      success: false,
-      message: err.message || 'Failed to update status.'
-    });
-  }
-});
+  });
 
 /**
  * DELETE /api/admin/inquiries/:id
  * Delete inquiry by ID
  */
-router.delete('/inquiries/:id', requireAdminAuth, async (req, res) => {
-  try {
-    const id = parseInt(req.params.id, 10);
-    if (isNaN(id) || id <= 0) {
-      return res.status(400).json({ success: false, message: 'Invalid inquiry ID.' });
-    }
+router.delete(
+  '/inquiries/:id',
+  requireAdminAuth,
+  requireCsrfToken,
+  async (req, res) => {
+    try {
+      const id = parseInt(req.params.id, 10);
+      if (isNaN(id) || id <= 0) {
+        return res.status(400).json({ success: false, message: 'Invalid inquiry ID.' });
+      }
 
-    const deleted = await db.deleteInquiry(id);
-    if (!deleted) {
-      return res.status(404).json({ success: false, message: 'Inquiry not found.' });
-    }
+      const deleted = await db.deleteInquiry(id);
+      if (!deleted) {
+        return res.status(404).json({ success: false, message: 'Inquiry not found.' });
+      }
 
-    return res.status(200).json({
-      success: true,
-      message: 'Inquiry deleted successfully.'
-    });
-  } catch (err) {
-    console.error('Error deleting inquiry:', err);
-    return res.status(500).json({
-      success: false,
-      message: 'Failed to delete inquiry.'
-    });
-  }
-});
+      return res.status(200).json({
+        success: true,
+        message: 'Inquiry deleted successfully.'
+      });
+    } catch (err) {
+      console.error('Error deleting inquiry:', err);
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to delete inquiry.'
+      });
+    }
+  });
 
 module.exports = router;

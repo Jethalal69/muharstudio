@@ -2,8 +2,23 @@
  * MUHAR STUDIO — Admin Dashboard Controller
  * Handles inquiry data loading, real-time filtering, status updates, modal views, and session management.
  */
+let csrfToken = null;
+
+async function fetchCsrfToken() {
+  const res = await fetch('/api/admin/csrf', {
+    credentials: 'same-origin'
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to get CSRF token.');
+  }
+
+  const data = await res.json();
+  csrfToken = data.csrfToken;
+}
 
 document.addEventListener('DOMContentLoaded', () => {
+
   // Navigation & Controls
   const userDisplay = document.getElementById('admin-user-display');
   const logoutBtn = document.getElementById('admin-logout-btn');
@@ -68,6 +83,7 @@ document.addEventListener('DOMContentLoaded', () => {
         userDisplay.textContent = data.user.username;
       }
 
+      await fetchCsrfToken();
       loadInquiries();
     } catch {
       window.location.href = '/admin/login';
@@ -193,7 +209,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const isConsultation = inq.type === 'consultation';
       const typeBadgeClass = isConsultation ? 'admin-badge-type--consultation' : 'admin-badge-type--contact';
       const typeLabel = isConsultation ? 'Consultation' : 'Contact';
-      
+
       const currentStatus = inq.status || 'new';
       const statusClass = `admin-badge-status--${currentStatus}`;
       const statusLabel = currentStatus.toUpperCase();
@@ -277,26 +293,26 @@ document.addEventListener('DOMContentLoaded', () => {
     // Client Info
     if (modalClientName) modalClientName.textContent = inquiry.name || 'Client Name';
     if (modalEmail) {
-      modalEmail.innerHTML = inquiry.email 
+      modalEmail.innerHTML = inquiry.email
         ? `<a href="mailto:${escapeHtml(inquiry.email)}" style="color: inherit; text-decoration: underline;">${escapeHtml(inquiry.email)}</a>`
         : '-';
     }
     if (modalPhone) {
-      modalPhone.innerHTML = inquiry.phone 
-        ? `<a href="tel:${escapeHtml(inquiry.phone)}" style="color: inherit; text-decoration: underline;">${escapeHtml(inquiry.phone)}</a>` 
+      modalPhone.innerHTML = inquiry.phone
+        ? `<a href="tel:${escapeHtml(inquiry.phone)}" style="color: inherit; text-decoration: underline;">${escapeHtml(inquiry.phone)}</a>`
         : '<span style="color: var(--muhar-text-muted);">Not provided</span>';
     }
     if (modalProject) modalProject.textContent = inquiry.project_type || 'General Contact';
     if (modalBudget) modalBudget.textContent = inquiry.budget || 'Not specified';
     if (modalDate) {
-      modalDate.textContent = inquiry.created_at 
+      modalDate.textContent = inquiry.created_at
         ? new Date(inquiry.created_at).toLocaleString('en-IN', {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
-          })
+          day: 'numeric',
+          month: 'short',
+          year: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        })
         : '-';
     }
     if (modalIp) modalIp.textContent = inquiry.ip_address || 'Not recorded';
@@ -363,7 +379,10 @@ document.addEventListener('DOMContentLoaded', () => {
     try {
       const res = await fetch(`/api/admin/inquiries/${id}/status`, {
         method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRF-Token': csrfToken
+        },
         credentials: 'same-origin',
         body: JSON.stringify({ status: newStatus })
       });
@@ -500,11 +519,11 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   // Backwards Compatibility Global Functions
-  window.viewInquiryDetail = function(id) {
+  window.viewInquiryDetail = function (id) {
     openDetailModal(id);
   };
 
-  window.quickUpdateStatus = function(id, newStatus) {
+  window.quickUpdateStatus = function (id, newStatus) {
     updateInquiryStatus(id, newStatus);
   };
 
@@ -537,7 +556,13 @@ document.addEventListener('DOMContentLoaded', () => {
   // ==========================================================================
   logoutBtn.addEventListener('click', async () => {
     try {
-      await fetch('/api/admin/logout', { method: 'POST', credentials: 'same-origin' });
+      await fetch('/api/admin/logout', {
+        method: 'POST',
+        headers: {
+          'X-CSRF-Token': csrfToken
+        },
+        credentials: 'same-origin'
+      });
     } finally {
       window.location.href = '/admin/login';
     }

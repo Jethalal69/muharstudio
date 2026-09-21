@@ -18,11 +18,11 @@ const config = {
 
   // Admin Authentication
   admin: {
-    username: process.env.ADMIN_USERNAME || 'admin',
-    password: process.env.ADMIN_PASSWORD || 'muhar_studio_2026!',
-    sessionSecret: process.env.ADMIN_SESSION_SECRET || 'muhar_studio_super_secret_session_key_2026_x89',
+    username: process.env.ADMIN_USERNAME || '',
+    password: process.env.ADMIN_PASSWORD || '',
+    sessionSecret: process.env.ADMIN_SESSION_SECRET || '',
     cookieName: 'muhar_admin_token',
-    maxAgeMs: 24 * 60 * 60 * 1000 // 24 hours
+    maxAgeMs: 24 * 60 * 60 * 1000
   },
 
   // Database (PostgreSQL for cloud/Vercel, SQLite for local fallback)
@@ -83,5 +83,23 @@ const config = {
     max: parseInt(process.env.RATE_LIMIT_MAX, 10) || 10 // max 10 submissions per IP per 15 min
   }
 };
+
+// Production security checks
+if (config.isProduction) {
+  const missing = [];
+
+  if (!config.admin.username) missing.push('ADMIN_USERNAME');
+  if (!config.admin.password) missing.push('ADMIN_PASSWORD');
+  if (!config.admin.sessionSecret) missing.push('ADMIN_SESSION_SECRET');
+  if (!config.allowedOrigin) missing.push('ALLOWED_ORIGIN');
+  if (!config.databaseUrl) missing.push('DATABASE_URL');
+
+  if (missing.length > 0) {
+    throw new Error(
+      `Missing required production environment variables: ${missing.join(', ')}`
+    );
+  }
+}
+
 
 module.exports = config;
